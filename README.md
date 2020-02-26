@@ -2,6 +2,7 @@
 
 # Welcome to the App!
 
-Matt Sullivan
-Taseen Hafiz
-Darrell Wulff
+Matt Sullivan  
+Taseen Hafiz  
+Darrell Wulff  
+Maddy Henderson  
