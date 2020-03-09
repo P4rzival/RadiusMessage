@@ -1,25 +1,21 @@
 package com.github.P4rzival.RadiusMessage;
 
+import org.json.*;
+
+import java.io.FileWriter;
+
 public class requestGenerator {
-    static boolean isPrime(int num)
+
+    void rGen(String postText, int postRadius, int postExpDelay)
     {
-        if (num >= 2)
-        {
-            if (num != 2 && num % 2 == 0)
-            {
-                return false;
-            }
-
-            for (int i = 3; i <= Math.sqrt(num); i++)
-            {
-                if (num % i ==0)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+        try {
+            JSONObject newPost = new JSONObject();
+            newPost.put("postText", postText);
+            newPost.put("postRadius", postRadius);
+            newPost.put("postExpirationDelay", postExpDelay);
         }
-        return false;
+        catch (JSONException e) {
+        e.printStackTrace();
+    }
     }
 }
