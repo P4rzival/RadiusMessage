@@ -9,9 +9,9 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest {
+public class RGUnitTest {
     @Test
-    public void rGenTest() {
+    public void textTest() {
         assertEquals(2, 2);
     }
 }

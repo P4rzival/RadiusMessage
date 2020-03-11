@@ -14,6 +14,9 @@ public class requestGenerator {
         }
         catch (JSONException e) {
         e.printStackTrace();
-    }
+        }
+
+        postRequestSupervisor(newPost);
+        DatabaseAccessor(newPost);
     }
 }
