@@ -16,7 +16,7 @@ public class requestGenerator {
         e.printStackTrace();
         }
 
-        postRequestSupervisor(newPost);
+        PRS(newPost);
         DatabaseAccessor(newPost);
     }
 }
