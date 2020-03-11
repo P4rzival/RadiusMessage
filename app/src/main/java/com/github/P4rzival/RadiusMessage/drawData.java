@@ -1,16 +1,11 @@
 package com.github.P4rzival.RadiusMessage;
 
-import java.io.Serializable;
 
-public class drawData implements Serializable
+import androidx.room.Entity;
+
+@Entity(tableName = "postData")
+public class drawData
 {
-    //If Serializable is too slow we can swtich to Parcelable for inbetween objects
-    public drawData(String message, float messageRadius, long timestamp)
-    {
-        userMessageText = message;
-        radius = messageRadius;
-        messageDuration = timestamp;
-    }
 
     public String getUserMessageText() {
         return userMessageText;
