@@ -1,3 +1,5 @@
+package com.github.P4rzival.RadiusMessage;
+
 import java.io.Serializable;
 
 public class drawData implements Serializable
