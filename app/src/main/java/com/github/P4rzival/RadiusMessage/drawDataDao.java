@@ -2,6 +2,7 @@ package com.github.P4rzival.RadiusMessage;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
+import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
@@ -12,6 +13,12 @@ public interface drawDataDao {
     @Query("SELECT * FROM postData")
     List<drawData> getAll();
 
+    @Insert
+    void insert(drawData newDrawData);
+
     @Delete
-    void delete(drawData olDrawData);
+    void delete(drawData oldDrawData);
+
+    @Query("DELETE FROM postData")
+    void deleteAllDrawData();
 }
