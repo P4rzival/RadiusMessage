@@ -1,5 +1,6 @@
 package com.github.P4rzival.RadiusMessage;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -11,7 +12,7 @@ import java.util.List;
 public interface drawDataDao {
 
     @Query("SELECT * FROM postData")
-    List<drawData> getAll();
+    LiveData<List<drawData>> getAll();
 
     @Insert
     void insert(drawData newDrawData);
