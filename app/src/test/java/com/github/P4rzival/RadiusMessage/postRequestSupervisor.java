@@ -19,4 +19,16 @@ public class postRequestSupervisor {
     private boolean prsContinue() {
         return this.shouldContinue;
     }
+
+    private boolean prsContinueTrue() {
+        return this.shouldContinue = true;
+    }
+
+    private boolean prsContinueFalse() {
+        return this.shouldContinue = false;
+    }
+
+    private boolean prsContinueToggle() {
+        return this.shouldContinue = !this.shouldContinue;
+    }
 }
