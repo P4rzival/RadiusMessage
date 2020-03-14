@@ -14,7 +14,7 @@ public class drawDataRepository {
     public drawDataRepository(Application application){
         drawDataLocalDatabase localDatabase = drawDataLocalDatabase.getInstance(application);
         drawDao = localDatabase.drawDao();
-        allPosts = drawDao.getAll();
+        //allPosts = drawDao.getAll();
     }
 
     //These are local database operations for the posts

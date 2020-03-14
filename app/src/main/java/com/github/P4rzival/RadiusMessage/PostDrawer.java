@@ -1,5 +1,6 @@
 package com.github.P4rzival.RadiusMessage;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -17,9 +18,32 @@ public class PostDrawer {
         drawRepo = new drawDataRepository(RadiusMessage.getAppInstance());
     }
 
+    public drawDataRepository getDrawRepo() {
+        return drawRepo;
+    }
+
     //Async Task
     /*public void createPost(JSONObject newPostJSON)
     {
 
     }*/
+
+    public drawData parsePostJSON(JSONObject newPostJSON) throws JSONException {
+
+        drawData newData = new drawData();
+
+        String message = newPostJSON.getString("userTextMessage");
+        double radius = newPostJSON.getDouble("radius");
+        double locX = newPostJSON.getDouble("locationX");
+        double locY = newPostJSON.getDouble("locationY");
+        long messageDur = newPostJSON.getLong("messageDuration");
+
+        newData.setUserMessageText(message);
+        newData.setRadius(radius);
+        newData.setLocationX(locX);
+        newData.setLocationY(locY);
+        newData.setMessageDuration(messageDur);
+
+        return newData;
+    }
 }

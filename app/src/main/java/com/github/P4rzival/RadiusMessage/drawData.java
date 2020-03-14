@@ -2,6 +2,7 @@ package com.github.P4rzival.RadiusMessage;
 
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "postData")
@@ -11,10 +12,12 @@ public class drawData
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String userMessageText;
-    private float radius;
-    private float locationX;
-    private float locationY;
+    private double radius;
+    private double locationX;
+    private double locationY;
     private long messageDuration;
+
+    //Overloading for options when creating drawData or if we need to update one.
 
     public drawData(String userMessageText, float radius, float locationX, float locationY, long messageDuration) {
         this.userMessageText = userMessageText;
@@ -22,6 +25,9 @@ public class drawData
         this.locationX = locationX;
         this.locationY = locationY;
         this.messageDuration = messageDuration;
+    }
+
+    public drawData() {
     }
 
     public void setId(int id) {
@@ -36,15 +42,15 @@ public class drawData
         return userMessageText;
     }
 
-    public float getRadius() {
+    public double getRadius() {
         return radius;
     }
 
-    public float getLocationX() {
+    public double getLocationX() {
         return locationX;
     }
 
-    public float getLocationY() {
+    public double getLocationY() {
         return locationY;
     }
 
@@ -52,4 +58,24 @@ public class drawData
         return messageDuration;
     }
 
+    //Used for drawData creation
+    public void setUserMessageText(String userMessageText) {
+        this.userMessageText = userMessageText;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public void setLocationX(double locationX) {
+        this.locationX = locationX;
+    }
+
+    public void setLocationY(double locationY) {
+        this.locationY = locationY;
+    }
+
+    public void setMessageDuration(long messageDuration) {
+        this.messageDuration = messageDuration;
+    }
 }
