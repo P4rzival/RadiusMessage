@@ -11,7 +11,7 @@ public class postRequestSupervisor {
     }
 
     void PRS(JSONObject newPost) {
-        while (PRSContinue() != true) ;
+        while (prsContinue() != true) ;
 
         postRenderer(newPost, npApprover(newPost));
     }
