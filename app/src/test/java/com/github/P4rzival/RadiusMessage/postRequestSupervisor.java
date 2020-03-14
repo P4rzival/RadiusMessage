@@ -15,4 +15,8 @@ public class postRequestSupervisor {
 
         postRenderer(newPost, npApprover(newPost));
     }
+
+    private boolean prsContinue() {
+        return this.shouldContinue;
+    }
 }
