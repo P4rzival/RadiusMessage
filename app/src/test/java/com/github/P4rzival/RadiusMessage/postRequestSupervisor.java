@@ -13,7 +13,7 @@ public class postRequestSupervisor {
     void PRS(JSONObject newPost) {
         while (prsContinue() != true) ;
 
-        postRenderer(newPost, npApprover(newPost));
+        PostRenderer(newPost, npApprover(newPost));
     }
 
     private boolean prsContinue() {
