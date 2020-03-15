@@ -2,18 +2,32 @@ package com.github.P4rzival.RadiusMessage;
 
 import org.json.*;
 
+import java.util.ArrayDeque;
+
 public class PostRequestSupervisor {
 
     private boolean shouldContinue = false;
 
-    public PostRequestSupervisor() {
+    JSONObject post;
+
+    static ArrayDeque<PostRequestSupervisor> waitingPostRequestSupervisors
+            = new ArrayDeque<PostRequestSupervisor>();
+
+    public PostRequestSupervisor(JSONObject newPost) {
         prsContinueFalse();
+        this.post = newPost;
+        waitingPostRequestSupervisors.add(this);
+        spinlock();
     }
 
-    void PRS(JSONObject newPost) {
+    void spinlock() {
+        DatabaseAccessor.databaseRequestApproval(this);
         while(!prsContinue()); // Spinlock
 
-        PostRenderer(newPost, npApprover(newPost));
+        //PostRenderer.render(post);
+
+        // Remove ourselves from the queue now that we're done
+        waitingPostRequestSupervisors.remove(this);
     }
 
     boolean prsContinue() {
