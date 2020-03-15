@@ -4,10 +4,10 @@ import org.json.*;
 
 public class postRequestSupervisor {
 
-    boolean shouldContinue = false;
+    private boolean shouldContinue = false;
 
     public postRequestSupervisor() {
-        shouldContinue = false;
+        prsContinueFalse();
     }
 
     void PRS(JSONObject newPost) {

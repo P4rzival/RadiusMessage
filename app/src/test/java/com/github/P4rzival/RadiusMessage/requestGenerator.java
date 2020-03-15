@@ -5,8 +5,8 @@ import org.json.*;
 public class requestGenerator {
 
     public JSONObject newPost = new JSONObject();
-    void rGen(String postText, int postRadius, int postExpDelay)
-    {
+
+    void rGen(String postText, int postRadius, int postExpDelay) {
         try {
             newPost.put("postText", postText);
             newPost.put("postRadius", postRadius);
@@ -16,7 +16,8 @@ public class requestGenerator {
         e.printStackTrace();
         }
 
+        postRequestSupervisor postRequestSupervisor = new postRequestSupervisor();
         PRS(newPost);
-        DatabaseAccessor(newPost);
+        DatabaseAccessor.databaseRequestApproval(newPost);
     }
 }
