@@ -63,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 Random rNum = new Random();
                 try {
                     test.put("userTextMessage", "ITs WORKING!");
-                    test.put("radius", rNum.nextDouble() + 120.0);
-                    test.put("locationX", 1 + (500 - 1) * rNum.nextDouble());
-                    test.put("locationY", 1 + (800 - 1) * rNum.nextDouble());
+                    test.put("radius", 15 + (200 - 15) * rNum.nextDouble());
+                    test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
+                    test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
                     test.put("messageDuration", 1000);
                 }catch (JSONException e){
                     e.printStackTrace();
