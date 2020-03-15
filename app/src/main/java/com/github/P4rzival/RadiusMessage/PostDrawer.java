@@ -1,5 +1,7 @@
 package com.github.P4rzival.RadiusMessage;
 
+import android.os.AsyncTask;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,8 +15,10 @@ import org.json.JSONObject;
 public class PostDrawer {
 
     private drawDataRepository drawRepo;
+    private drawData currentDrawData;
 
     public PostDrawer() {
+
         drawRepo = new drawDataRepository(RadiusMessage.getAppInstance());
     }
 
@@ -22,12 +26,18 @@ public class PostDrawer {
         return drawRepo;
     }
 
-    //Async Task
-    /*public void createPost(JSONObject newPostJSON)
+    public void setCurrentDrawData(drawData currentDrawData) {
+        this.currentDrawData = currentDrawData;
+    }
+
+    //Async Task Call in createPost
+    public void createPost(JSONObject newPostJSON)
     {
+        new parsePostJSONAsync().execute(newPostJSON);
+        drawRepo.insert(currentDrawData);
+    }
 
-    }*/
-
+    //Seperated out the doInbackground logic from the AsyncTask so I could Unit Test it
     public drawData parsePostJSON(JSONObject newPostJSON) throws JSONException {
 
         drawData newData = new drawData();
@@ -45,5 +55,40 @@ public class PostDrawer {
         newData.setMessageDuration(messageDur);
 
         return newData;
+    }
+
+    //The AsynTask class acts as sort of a function object
+    //I made mine private so that the public createPost method was the only way to call this.
+    //It takes in a JSONObject, No updates so third type is Void, Returns a drawData
+    private class parsePostJSONAsync extends AsyncTask<JSONObject, Void, drawData>{
+
+
+
+        //Had to surrond with try and catch block, but usually you might not need to
+        //The stuff you need to do in the background goes in here.
+        //You can add a constructor or preExecute method
+        //to setup anything before doing the background thread work.
+        @Override
+        protected drawData doInBackground(JSONObject... jsonObjects) {
+            drawData newDrawData;
+            try {
+                newDrawData = parsePostJSON(jsonObjects[0]);
+                return newDrawData;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        //Different ways to return data, I just set private drawData variable but
+        //there is a way to use a public AsyncTask Class and an interface to have
+        //return when and where the AsyncTask class was used.
+        //This page here explains it:
+        //https://stackoverflow.com/questions/12575068/how-to-get-the-result-of-onpostexecute-to-main-activity-because-asynctask-is-a
+
+
+        @Override
+        protected void onPostExecute(drawData drawData) {
+            setCurrentDrawData(drawData);
+        }
     }
 }
