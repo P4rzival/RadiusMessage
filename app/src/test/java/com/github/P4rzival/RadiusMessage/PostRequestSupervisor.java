@@ -2,11 +2,11 @@ package com.github.P4rzival.RadiusMessage;
 
 import org.json.*;
 
-public class postRequestSupervisor {
+public class PostRequestSupervisor {
 
     private boolean shouldContinue = false;
 
-    public postRequestSupervisor() {
+    public PostRequestSupervisor() {
         prsContinueFalse();
     }
 
@@ -16,19 +16,19 @@ public class postRequestSupervisor {
         PostRenderer(newPost, npApprover(newPost));
     }
 
-    private boolean prsContinue() {
+    boolean prsContinue() {
         return this.shouldContinue;
     }
 
-    private boolean prsContinueTrue() {
+    boolean prsContinueTrue() {
         return this.shouldContinue = true;
     }
 
-    private boolean prsContinueFalse() {
+    boolean prsContinueFalse() {
         return this.shouldContinue = false;
     }
 
-    private boolean prsContinueToggle() {
+    boolean prsContinueToggle() {
         return this.shouldContinue = !this.shouldContinue;
     }
 }
