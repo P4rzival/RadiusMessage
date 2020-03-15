@@ -22,17 +22,7 @@ public class PostRequestSupervisor {
         this.post = newPost;
         timeoutCounter = 0;
         waitingPostRequestSupervisors.add(this);
-        spinlock();
-    }
-
-    private void spinlock() {
-        DatabaseAccessor.databaseRequestApproval(this);
-        while(!prsContinue()); // Spinlock
-
-        //(new PostDrawer()).createPost(this.post);
-
-        // Remove ourselves from the queue now that we're done
-        waitingPostRequestSupervisors.remove(this);
+        new SpinlockTask().execute(this);
     }
 
     private class SpinlockTask extends AsyncTask<PostRequestSupervisor, Long, Integer> {
