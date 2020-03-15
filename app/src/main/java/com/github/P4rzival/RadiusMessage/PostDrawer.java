@@ -34,7 +34,6 @@ public class PostDrawer {
     public void createPost(JSONObject newPostJSON)
     {
         new parsePostJSONAsync().execute(newPostJSON);
-        drawRepo.insert(currentDrawData);
     }
 
     //Seperated out the doInbackground logic from the AsyncTask so I could Unit Test it
@@ -73,6 +72,9 @@ public class PostDrawer {
             drawData newDrawData;
             try {
                 newDrawData = parsePostJSON(jsonObjects[0]);
+                //Figure this fix out later
+                setCurrentDrawData(newDrawData);
+                drawRepo.insert(newDrawData);
                 return newDrawData;
             } catch (JSONException e) {
                 e.printStackTrace();
