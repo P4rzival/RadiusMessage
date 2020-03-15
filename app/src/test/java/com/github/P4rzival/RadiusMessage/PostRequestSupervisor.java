@@ -20,7 +20,7 @@ public class PostRequestSupervisor {
         spinlock();
     }
 
-    void spinlock() {
+    private void spinlock() {
         DatabaseAccessor.databaseRequestApproval(this);
         while(!prsContinue()); // Spinlock
 
