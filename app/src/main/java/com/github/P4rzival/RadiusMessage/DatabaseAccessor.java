@@ -6,11 +6,11 @@ public class DatabaseAccessor {
 
     public DatabaseAccessor() { }
 
-    public static void databaseFakeRequestApproval(JSONObject jsonObject) {
-        postRequestSupervisor.PRSContinueTrue();
+    public static void databaseFakeRequestApproval(PostRequestSupervisor postRequestSupervisor) {
+        postRequestSupervisor.prsContinueTrue();
     }
 
-    public static void databaseRequestApproval(JSONObject jsonObject) {
+    public static void databaseRequestApproval(PostRequestSupervisor postRequestSupervisor) {
         databaseFakeRequestApproval(jsonObject);
     }
 
