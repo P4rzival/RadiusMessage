@@ -1,5 +1,7 @@
 package com.github.P4rzival.RadiusMessage;
 
+import android.os.AsyncTask;
+
 import org.json.*;
 
 import java.util.ArrayDeque;
@@ -31,6 +33,39 @@ public class PostRequestSupervisor {
 
         // Remove ourselves from the queue now that we're done
         waitingPostRequestSupervisors.remove(this);
+    }
+
+    private class SpinlockTask extends AsyncTask<PostRequestSupervisor, Long, Integer> {
+
+        long previousTime = System.currentTimeMillis();
+        long currentTime = previousTime;
+
+        @Override
+        protected Integer doInBackground(PostRequestSupervisor... postRequestSupervisors) {
+
+            DatabaseAccessor.databaseRequestApproval(postRequestSupervisors[0]);
+
+            // Spinlock
+            while(!prsContinue())
+            {
+                currentTime = System.currentTimeMillis();
+                publishProgress(currentTime - previousTime);
+                previousTime = currentTime;
+            }
+
+            //(new PostDrawer()).createPost(this.post);
+            return 0;
+        }
+
+        @Override
+        protected void onProgressUpdate(Long... progress) {
+            timeoutCounter += progress[0];
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            waitingPostRequestSupervisors.remove(this);
+        }
     }
 
     boolean prsContinue() {
