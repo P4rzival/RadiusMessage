@@ -7,5 +7,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <declare-styleable name="Post">
+        <attr name="postColor" format="color"/>
+        <attr name="radius" format="float"/>
+        <attr name="locX" format="float"/>
+        <attr name="locY" format="float"/>
+        <attr name="userMessage" format="string"/>
+        <attr name="messageDuration" format="integer"/>
+        <attr name="showPopup" format="boolean"/>
+    </declare-styleable>
 
 </resources>
