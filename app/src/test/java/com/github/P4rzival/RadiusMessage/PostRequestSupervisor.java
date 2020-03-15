@@ -43,7 +43,7 @@ public class PostRequestSupervisor {
                 previousTime = currentTime;
             }
 
-            //(new PostDrawer()).createPost(this.post);
+            (new PostDrawer()).createPost(postRequestSupervisors[0].post);
             return 0;
         }
 
