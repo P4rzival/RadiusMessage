@@ -16,8 +16,8 @@ public class requestGenerator {
         e.printStackTrace();
         }
 
-        postRequestSupervisor postRequestSupervisor = new postRequestSupervisor();
-        PRS(newPost);
-        DatabaseAccessor.databaseRequestApproval(newPost);
+        PostRequestSupervisor postRequestSupervisor = new PostRequestSupervisor();
+        postRequestSupervisor.PRS(newPost);
+        DatabaseAccessor.databaseRequestApproval(postRequestSupervisor);
     }
 }
