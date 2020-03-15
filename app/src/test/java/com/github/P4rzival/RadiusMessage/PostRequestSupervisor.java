@@ -24,7 +24,7 @@ public class PostRequestSupervisor {
         DatabaseAccessor.databaseRequestApproval(this);
         while(!prsContinue()); // Spinlock
 
-        //PostRenderer.render(post);
+        //(new PostDrawer()).createPost(this.post);
 
         // Remove ourselves from the queue now that we're done
         waitingPostRequestSupervisors.remove(this);
