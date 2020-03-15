@@ -10,12 +10,15 @@ public class PostRequestSupervisor {
 
     JSONObject post;
 
+    long timeoutCounter = 0l;
+
     static ArrayDeque<PostRequestSupervisor> waitingPostRequestSupervisors
             = new ArrayDeque<PostRequestSupervisor>();
 
     public PostRequestSupervisor(JSONObject newPost) {
         prsContinueFalse();
         this.post = newPost;
+        timeoutCounter = 0;
         waitingPostRequestSupervisors.add(this);
         spinlock();
     }
