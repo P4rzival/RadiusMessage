@@ -11,7 +11,7 @@ public class DatabaseAccessor {
     }
 
     public static void databaseRequestApproval(PostRequestSupervisor postRequestSupervisor) {
-        databaseFakeRequestApproval(jsonObject);
+        databaseFakeRequestApproval(postRequestSupervisor);
     }
 
 }
