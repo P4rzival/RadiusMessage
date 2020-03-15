@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         //Need this in main activity for postRenderer to work.
         //Need the parent layout
         parentLayout = findViewById(R.id.parentLayout);
-
         //Keep this here for updating the posts
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
         //For the Demo
@@ -44,12 +44,14 @@ public class MainActivity extends AppCompatActivity {
                 if(drawData != null && drawData.size() > 0)
                 {
                     addPostToView(drawData.get(drawData.size()-1));
+                    onClickPosts();
                 }
                 Toast.makeText(MainActivity.this
                         , "Post Map Updated"
                         , Toast.LENGTH_SHORT).show();
             }
         });
+
         //End of PostRenderer stuff needed in onCreate
 
 
@@ -82,5 +84,21 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Post newPost = new Post(getApplicationContext(), newPostDrawData);
         parentLayout.addView(newPost);
+        postRenderer.postList.add(newPost);
+    }
+
+    //For demo 1
+    public void onClickPosts(){
+        for (int i = 0; i < postRenderer.postList.size(); i++){
+            postRenderer.postList.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Toast.makeText(getApplicationContext()
+                            , "Post Opened."
+                            , Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

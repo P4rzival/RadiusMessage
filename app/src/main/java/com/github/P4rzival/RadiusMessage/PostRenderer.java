@@ -1,11 +1,14 @@
 package com.github.P4rzival.RadiusMessage;
 
 import android.app.Application;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //https://medium.com/@elye.project/understanding-live-data-made-simple-a820fcd7b4d0
@@ -15,6 +18,7 @@ public class PostRenderer extends ViewModel {
 
     private drawDataRepository drawRepository;
     private LiveData<List<drawData>> allPostDrawData;
+    public ArrayList<Post> postList = new ArrayList<Post>();
 
     public PostRenderer(){
         drawRepository = new drawDataRepository(RadiusMessage.getAppInstance());
@@ -41,4 +45,6 @@ public class PostRenderer extends ViewModel {
     public void updatePostDataList(){
         allPostDrawData = drawRepository.getAll();
     }
+
+
 }
