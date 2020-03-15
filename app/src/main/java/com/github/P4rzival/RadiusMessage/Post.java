@@ -57,4 +57,8 @@ public class Post extends View implements View.OnClickListener {
     public void setListener(OnClickListener listener) {
         this.listener = listener;
     }
+
+    public drawData getPostData() {
+        return postData;
+    }
 }

@@ -9,9 +9,15 @@ import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -25,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public ConstraintLayout parentLayout;
     public PostRenderer postRenderer;
     private Button testPostButton;
+    private Post currentPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject test = new JSONObject();
                 Random rNum = new Random();
                 try {
-                    test.put("userTextMessage", "ITs WORKING!");
+                    //CHNAGE THIS LINE FOR DIFFERENT TEXT!
+                    test.put("userTextMessage", "I Love Circles!");
                     test.put("radius", 15 + (200 - 15) * rNum.nextDouble());
                     test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
                     test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
@@ -90,9 +98,33 @@ public class MainActivity extends AppCompatActivity {
     //For demo 1
     public void onClickPosts(){
         for (int i = 0; i < postRenderer.postList.size(); i++){
-            postRenderer.postList.get(i).setOnClickListener(new View.OnClickListener() {
+            currentPost = postRenderer.postList.get(i);
+            currentPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View newMessagePopup = inflater.inflate(R.layout.post_message, null);
+
+                    int width = 920;
+                    int height = 1400;
+                    boolean focusable = true;
+
+                    final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
+                    window.showAtLocation(parentLayout, Gravity.CENTER, 0,0);
+
+                    //Add text to popup from user input
+                    TextView currentText = window
+                            .getContentView()
+                            .findViewById(R.id.messageTextView);
+
+                    currentText.setText(currentPost.getPostData().getUserMessageText());
+                    newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            window.dismiss();
+                            return true;
+                        }
+                    });
 
                     Toast.makeText(getApplicationContext()
                             , "Post Opened."
