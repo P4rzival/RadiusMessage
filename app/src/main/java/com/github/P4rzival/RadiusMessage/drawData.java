@@ -1,47 +1,81 @@
 package com.github.P4rzival.RadiusMessage;
 
-import java.io.Serializable;
 
-public class drawData implements Serializable
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "postData")
+public class drawData
 {
-    //If Serializable is too slow we can swtich to Parcelable for inbetween objects
-    public drawData(String message, float messageRadius, long timestamp)
-    {
-        userMessageText = message;
-        radius = messageRadius;
-        messageDuration = timestamp;
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private String userMessageText;
+    private double radius;
+    private double locationX;
+    private double locationY;
+    private long messageDuration;
+
+    //Overloading for options when creating drawData or if we need to update one.
+
+    public drawData(String userMessageText, float radius, float locationX, float locationY, long messageDuration) {
+        this.userMessageText = userMessageText;
+        this.radius = radius;
+        this.locationX = locationX;
+        this.locationY = locationY;
+        this.messageDuration = messageDuration;
+    }
+
+    public drawData() {
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getUserMessageText() {
         return userMessageText;
     }
 
-    public void setUserMessageText(String userMessageText) {
-        this.userMessageText = userMessageText;
-    }
-
-    public float getRadius() {
+    public double getRadius() {
         return radius;
     }
 
-    public void setRadius(float radius) {
-        this.radius = radius;
+    public double getLocationX() {
+        return locationX;
+    }
+
+    public double getLocationY() {
+        return locationY;
     }
 
     public long getMessageDuration() {
         return messageDuration;
     }
 
+    //Used for drawData creation
+    public void setUserMessageText(String userMessageText) {
+        this.userMessageText = userMessageText;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public void setLocationX(double locationX) {
+        this.locationX = locationX;
+    }
+
+    public void setLocationY(double locationY) {
+        this.locationY = locationY;
+    }
+
     public void setMessageDuration(long messageDuration) {
         this.messageDuration = messageDuration;
     }
-
-    //Small object class to pass data to activities
-    private String userMessageText;
-    private float radius;
-    //Assuming duration time will be stored as a long, subject to change
-    private long messageDuration;
-
-
-
 }
