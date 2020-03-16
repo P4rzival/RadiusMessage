@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 JSONObject test = new JSONObject();
                 Random rNum = new Random();
+                openDialog();
                 try {
                     //CHNAGE THIS LINE FOR DIFFERENT TEXT!
                     test.put("userTextMessage", "I Love Circles!");
@@ -85,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
                 postDrawer.createPost(test);
             }
         });
+    }
+
+    public void openDialog() {
+
     }
 
     //Need this in main activity for now

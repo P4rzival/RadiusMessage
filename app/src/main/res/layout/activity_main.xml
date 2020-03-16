@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="20dp"
         android:layout_marginBottom="184dp"
-        android:text="Put Down Post"
+        android:text="Create Text Post"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
