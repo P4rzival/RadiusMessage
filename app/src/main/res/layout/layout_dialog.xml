@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="16dp">
 
     <EditText
         android:id="@+id/edit_textPost"
@@ -10,8 +11,17 @@
 
     <EditText
         android:id="@+id/edit_radius"
+        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_textPost"
         android:hint="Enter Radius of Post" />
+
+    <EditText
+        android:id="@+id/edit_duration"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_radius"
+        android:hint="Enter Duration of Post (In Hours)" />
 </RelativeLayout>
