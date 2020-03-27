@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TextPostDialog.TextPostDialogListener {
 
     public ConstraintLayout parentLayout;
     public PostRenderer postRenderer;
@@ -68,23 +68,34 @@ public class MainActivity extends AppCompatActivity {
         testPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                JSONObject test = new JSONObject();
-                Random rNum = new Random();
-                try {
-                    //CHNAGE THIS LINE FOR DIFFERENT TEXT!
-                    test.put("userTextMessage", "I Love Circles!");
-                    test.put("radius", 15 + (200 - 15) * rNum.nextDouble());
-                    test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
-                    test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
-                    test.put("messageDuration", 1000);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
+                openDialog();
 
-                PostDrawer postDrawer = new PostDrawer();
-                postDrawer.createPost(test);
             }
         });
+    }
+
+    public void openDialog() {
+        TextPostDialog textPostDialog = new TextPostDialog();
+        textPostDialog.show(getSupportFragmentManager(), "Example TextPost");
+    }
+
+    @Override
+    public void applyTexts(String postText, int postRadius, int postDuration) {
+        JSONObject test = new JSONObject();
+        Random rNum = new Random();
+        try {
+            //CHNAGE THIS LINE FOR DIFFERENT TEXT!
+            test.put("userTextMessage", postText);
+            test.put("radius", postRadius);
+            test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
+            test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
+            test.put("messageDuration", postDuration);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        PostDrawer postDrawer = new PostDrawer();
+        postDrawer.createPost(test);
     }
 
     //Need this in main activity for now
