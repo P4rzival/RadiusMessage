@@ -51,7 +51,7 @@ public class Post extends View implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(getContext(), "On click.", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "On click.", Toast.LENGTH_SHORT).show();
     }
 
     public void setListener(OnClickListener listener) {

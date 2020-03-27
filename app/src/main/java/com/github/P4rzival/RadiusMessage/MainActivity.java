@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,13 +26,20 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+import java.lang.Math;
+
+public class MainActivity extends AppCompatActivity implements TextPostDialog.TextPostDialogListener {
 
     public ConstraintLayout parentLayout;
     public PostRenderer postRenderer;
     private Button testPostButton;
     private Post currentPost;
+    //will move this to user tpye of class later
+    private float lastTouchX;
+    private float lastTouchY;
 
+    //May need for later
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                         , Toast.LENGTH_SHORT).show();
             }
         });
-
         //End of PostRenderer stuff needed in onCreate
 
 
@@ -68,23 +74,34 @@ public class MainActivity extends AppCompatActivity {
         testPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                JSONObject test = new JSONObject();
-                Random rNum = new Random();
-                try {
-                    //CHNAGE THIS LINE FOR DIFFERENT TEXT!
-                    test.put("userTextMessage", "I Love Circles!");
-                    test.put("radius", 15 + (200 - 15) * rNum.nextDouble());
-                    test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
-                    test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
-                    test.put("messageDuration", 1000);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
+                openDialog();
 
-                PostDrawer postDrawer = new PostDrawer();
-                postDrawer.createPost(test);
             }
         });
+    }
+
+    public void openDialog() {
+        TextPostDialog textPostDialog = new TextPostDialog();
+        textPostDialog.show(getSupportFragmentManager(), "Example TextPost");
+    }
+
+    @Override
+    public void applyTexts(String postText, int postRadius, int postDuration) {
+        JSONObject test = new JSONObject();
+        Random rNum = new Random();
+        try {
+            //CHNAGE THIS LINE FOR DIFFERENT TEXT!
+            test.put("userTextMessage", postText);
+            test.put("radius", postRadius);
+            test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
+            test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
+            test.put("messageDuration", postDuration);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        PostDrawer postDrawer = new PostDrawer();
+        postDrawer.createPost(test);
     }
 
     //Need this in main activity for now
@@ -95,42 +112,89 @@ public class MainActivity extends AppCompatActivity {
         postRenderer.postList.add(newPost);
     }
 
-    //For demo 1
+    //For demo 1 keep commented out
+    //Kinda a hack for now, not my favorite way of solving this.
+    //Though it won't go through the whole array, it stops when no input
     public void onClickPosts(){
-        for (int i = 0; i < postRenderer.postList.size(); i++){
+        for (int i = 0; i < postRenderer.postList.size(); i++) {
             currentPost = postRenderer.postList.get(i);
+            View.OnTouchListener touchListener = new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        lastTouchX = motionEvent.getX();
+                        lastTouchY = motionEvent.getY();
+                        Post postToOpen = isInRadius(lastTouchX, lastTouchY);
+                        if (postToOpen != null) {
+                            openPostMessage(postToOpen);
+                        }
+                    }
+                    return false;
+                }
+            };
+            currentPost.setOnTouchListener(touchListener);
             currentPost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View newMessagePopup = inflater.inflate(R.layout.post_message, null);
 
-                    int width = 920;
-                    int height = 1400;
-                    boolean focusable = true;
-
-                    final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
-                    window.showAtLocation(parentLayout, Gravity.CENTER, 0,0);
-
-                    //Add text to popup from user input
-                    TextView currentText = window
-                            .getContentView()
-                            .findViewById(R.id.messageTextView);
-
-                    currentText.setText(currentPost.getPostData().getUserMessageText());
-                    newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            window.dismiss();
-                            return true;
-                        }
-                    });
-
-                    Toast.makeText(getApplicationContext()
-                            , "Post Opened."
-                            , Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
+
+    //Going to use a method like this for our user location to post detection
+    //so might as well do this now
+    //Will need to focus on optimising this in future but for now this is it
+    public Post isInRadius(float touchX, float touchY){
+
+        Post postToOpen = null;
+
+        float distance;
+
+        for (int i = 0; i < postRenderer.postList.size(); i++){
+            drawData postData = postRenderer.postList.get(i).getPostData();
+
+            distance = (float) (Math.pow(touchX - (float) postData.getLocationX(),2) +
+                    Math.pow(touchY - (float) postData.getLocationY(), 2));
+
+            if(Math.sqrt(distance) <= postData.getRadius()){
+                postToOpen = postRenderer.postList.get(i);
+            }
+        }
+        return postToOpen;
+    }
+
+    //Open message after detecting touch
+    public void openPostMessage(Post currentPost){
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View newMessagePopup = inflater.inflate(R.layout.post_message, null);
+
+        int width = 920;
+        int height = 1400;
+        boolean focusable = true;
+
+        final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
+        window.showAtLocation(parentLayout, Gravity.CENTER, 0,0);
+
+        //Add text to popup from user input
+        TextView currentText = window
+                .getContentView()
+                .findViewById(R.id.messageTextView);
+
+        currentText.setText(currentPost.getPostData().getUserMessageText());
+        newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                window.dismiss();
+                return true;
+            }
+        });
+
+        Toast.makeText(getApplicationContext()
+                , "Post Opened."
+                , Toast.LENGTH_SHORT).show();
+
+    }
+
 }
