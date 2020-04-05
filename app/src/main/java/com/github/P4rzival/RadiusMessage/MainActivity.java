@@ -91,11 +91,8 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         Random rNum = new Random();
         try {
             //CHNAGE THIS LINE FOR DIFFERENT TEXT!
-            test.put("userTextMessage", postText);
-            test.put("radius", postRadius);
-            test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
-            test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
-            test.put("messageDuration", postDuration);
+            RequestGenerator.generateRequest(postText, postRadius, postDuration);
+            
         }catch (JSONException e){
             e.printStackTrace();
         }
