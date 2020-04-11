@@ -6,7 +6,7 @@ import java.util.*;
 
 public class RequestGenerator {
 
-    public static void generateRequest(String userTextMessage, double radius, long postDuration) {
+    public static JSONObject generateRequest(String userTextMessage, double radius, long postDuration) {
         Random rNum = new Random();
         JSONObject newPost = new JSONObject();
 
@@ -22,5 +22,6 @@ public class RequestGenerator {
         }
 
         new PostRequestSupervisor(newPost);
+        return newPost;
 }
 }

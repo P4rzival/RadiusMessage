@@ -87,18 +87,17 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
 
     @Override
     public void applyTexts(String postText, int postRadius, int postDuration) {
-        JSONObject test = new JSONObject();
+        JSONObject textPost = new JSONObject();
         Random rNum = new Random();
         try {
-            //CHNAGE THIS LINE FOR DIFFERENT TEXT!
             RequestGenerator.generateRequest(postText, postRadius, postDuration);
-            
+
         }catch (JSONException e){
             e.printStackTrace();
         }
 
         PostDrawer postDrawer = new PostDrawer();
-        postDrawer.createPost(test);
+        postDrawer.createPost(textPost);
     }
 
     //Need this in main activity for now
