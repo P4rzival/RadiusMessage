@@ -9,16 +9,16 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface drawDataDao {
+public interface DrawDataDatabaseAccessorObject {
 
     @Query("SELECT * FROM postData")
-    LiveData<List<drawData>> getAll();
+    LiveData<List<DrawData>> getAll();
 
     @Insert
-    void insert(drawData newDrawData);
+    void insert(DrawData newDrawData);
 
     @Delete
-    void delete(drawData oldDrawData);
+    void delete(DrawData oldDrawData);
 
     @Query("DELETE FROM postData")
     void deleteAllDrawData();

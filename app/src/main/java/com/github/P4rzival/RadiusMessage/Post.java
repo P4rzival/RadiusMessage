@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.Random;
 
@@ -13,10 +12,10 @@ public class Post extends View implements View.OnClickListener {
 
     private Paint paint;
     public boolean isPressed = false;
-    private drawData postData;
+    private DrawData postData;
     private OnClickListener listener;
 
-    public Post(Context context, drawData newDrawData) {
+    public Post(Context context, DrawData newDrawData) {
         super(context);
 
         setOnClickListener(this);
@@ -58,7 +57,7 @@ public class Post extends View implements View.OnClickListener {
         this.listener = listener;
     }
 
-    public drawData getPostData() {
+    public DrawData getPostData() {
         return postData;
     }
 }

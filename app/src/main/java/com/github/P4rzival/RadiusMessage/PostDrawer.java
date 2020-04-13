@@ -6,40 +6,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-//simple class to run a task in background in order to
-//parse a JSON object, sends new drawData to the drawRepo
-//Probably should change to intentService in another sprint!!
-//or better pass application context from the input activity
-//all the way back to the requestSupervisor for a much better
-// way of doing things!
+//TODO possibly change to intentService if time permits
 public class PostDrawer {
 
-    private drawDataRepository drawRepo;
-    private drawData currentDrawData;
+    private DrawDataRepository drawRepo;
+    private DrawData currentDrawData;
 
     public PostDrawer() {
 
-        drawRepo = new drawDataRepository(RadiusMessage.getAppInstance());
+        drawRepo = new DrawDataRepository(RadiusMessage.getAppInstance());
     }
 
-    public drawDataRepository getDrawRepo() {
+    public DrawDataRepository getDrawRepo() {
         return drawRepo;
     }
 
-    public void setCurrentDrawData(drawData currentDrawData) {
+    public void setCurrentDrawData(DrawData currentDrawData) {
         this.currentDrawData = currentDrawData;
     }
 
-    //Async Task Call in createPost
     public void createPost(JSONObject newPostJSON)
     {
         new parsePostJSONAsync().execute(newPostJSON);
     }
 
-    //Seperated out the doInbackground logic from the AsyncTask so I could Unit Test it
-    public drawData parsePostJSON(JSONObject newPostJSON) throws JSONException {
+    public DrawData parsePostJSON(JSONObject newPostJSON) throws JSONException {
 
-        drawData newData = new drawData();
+        DrawData newData = new DrawData();
 
         String message = newPostJSON.getString("userTextMessage");
         double radius = newPostJSON.getDouble("radius");
@@ -56,20 +49,11 @@ public class PostDrawer {
         return newData;
     }
 
-    //The AsynTask class acts as sort of a function object
-    //I made mine private so that the public createPost method was the only way to call this.
-    //It takes in a JSONObject, No updates so third type is Void, Returns a drawData
-    private class parsePostJSONAsync extends AsyncTask<JSONObject, Void, drawData>{
+    private class parsePostJSONAsync extends AsyncTask<JSONObject, Void, DrawData>{
 
-
-
-        //Had to surrond with try and catch block, but usually you might not need to
-        //The stuff you need to do in the background goes in here.
-        //You can add a constructor or preExecute method
-        //to setup anything before doing the background thread work.
         @Override
-        protected drawData doInBackground(JSONObject... jsonObjects) {
-            drawData newDrawData;
+        protected DrawData doInBackground(JSONObject... jsonObjects) {
+            DrawData newDrawData;
             try {
                 newDrawData = parsePostJSON(jsonObjects[0]);
                 //Figure this fix out later
@@ -80,17 +64,6 @@ public class PostDrawer {
                 e.printStackTrace();
             }
             return null;
-        }
-        //Different ways to return data, I just set private drawData variable but
-        //there is a way to use a public AsyncTask Class and an interface to have
-        //return when and where the AsyncTask class was used.
-        //This page here explains it:
-        //https://stackoverflow.com/questions/12575068/how-to-get-the-result-of-onpostexecute-to-main-activity-because-asynctask-is-a
-
-
-        @Override
-        protected void onPostExecute(drawData drawData) {
-            setCurrentDrawData(drawData);
         }
     }
 }

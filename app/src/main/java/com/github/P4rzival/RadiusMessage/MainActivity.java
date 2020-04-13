@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public PostRenderer postRenderer;
     private Button testPostButton;
     private Post currentPost;
-    //will move this to user tpye of class later
+
     private float lastTouchX;
     private float lastTouchY;
 
@@ -43,15 +43,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Need this in main activity for postRenderer to work.
-        //Need the parent layout
         parentLayout = findViewById(R.id.parentLayout);
-        //Keep this here for updating the posts
+
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
         //For the Demo
         postRenderer.deleteAllData();
-        postRenderer.getAllPostDrawData().observe(this, new Observer<List<drawData>>() {
+        postRenderer.getAllPostDrawData().observe(this, new Observer<List<DrawData>>() {
             @Override
-            public void onChanged(List<drawData> drawData) {
+            public void onChanged(List<DrawData> drawData) {
                 if(drawData != null && drawData.size() > 0)
                 {
                     addPostToView(drawData.get(drawData.size()-1));
@@ -64,9 +63,6 @@ public class MainActivity extends AppCompatActivity {
         });
         //End of PostRenderer stuff needed in onCreate
 
-
-        //This is just a back up button that makes a random post
-        //Can replace this with Maddy's stuff if we are able to!
         testPostButton = findViewById(R.id.postButton);
         testPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,17 +86,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //Need this in main activity for now
-    public void addPostToView(drawData newPostDrawData){
+
+    public void addPostToView(DrawData newPostDrawData){
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Post newPost = new Post(getApplicationContext(), newPostDrawData);
         parentLayout.addView(newPost);
         postRenderer.postList.add(newPost);
     }
 
-    //For demo 1 keep commented out
-    //Kinda a hack for now, not my favorite way of solving this.
-    //Though it won't go through the whole array, it stops when no input
     public void onClickPosts(){
         for (int i = 0; i < postRenderer.postList.size(); i++) {
             currentPost = postRenderer.postList.get(i);
@@ -128,9 +121,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Going to use a method like this for our user location to post detection
-    //so might as well do this now
-    //Will need to focus on optimising this in future but for now this is it
     public Post isInRadius(float touchX, float touchY){
 
         Post postToOpen = null;
@@ -138,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         float distance;
 
         for (int i = 0; i < postRenderer.postList.size(); i++){
-            drawData postData = postRenderer.postList.get(i).getPostData();
+            DrawData postData = postRenderer.postList.get(i).getPostData();
 
             distance = (float) (Math.pow(touchX - (float) postData.getLocationX(),2) +
                     Math.pow(touchY - (float) postData.getLocationY(), 2));
@@ -150,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         return postToOpen;
     }
 
-    //Open message after detecting touch
     public void openPostMessage(Post currentPost){
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -163,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
         final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
         window.showAtLocation(parentLayout, Gravity.CENTER, 0,0);
 
-        //Add text to popup from user input
         TextView currentText = window
                 .getContentView()
                 .findViewById(R.id.messageTextView);
