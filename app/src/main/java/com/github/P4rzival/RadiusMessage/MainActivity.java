@@ -89,12 +89,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     public void applyTexts(String postText, int postRadius, int postDuration) {
         JSONObject textPost = new JSONObject();
         Random rNum = new Random();
-        try {
-            RequestGenerator.generateRequest(postText, postRadius, postDuration);
-
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
+        RequestGenerator.generateRequest(postText, postRadius, postDuration);
 
         PostDrawer postDrawer = new PostDrawer();
         postDrawer.createPost(textPost);
