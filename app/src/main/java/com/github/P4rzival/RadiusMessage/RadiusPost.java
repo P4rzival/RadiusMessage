@@ -56,6 +56,7 @@ public class RadiusPost extends Polygon {
 
     public void drawMapPost(GeoPoint messageLocation, MapView mapView){
         this.setPoints(Polygon.pointsAsCircle(messageLocation, postData.getRadius()));
+        paint.setAlpha(115);
         this.setFillColor(paint.getColor());
         this.setStrokeColor(paint.getColor());
         this.setStrokeWidth(1);
