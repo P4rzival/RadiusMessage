@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         locationNewOverlay.enableFollowLocation();
         map.getOverlays().add(locationNewOverlay);
 
+
         //Need this in main activity for postRenderer to work.
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
@@ -159,6 +160,15 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         GeoPoint messageLocation = locationNewOverlay.getMyLocation();
         newPost.drawMapPost(messageLocation, map);
         postRenderer.radiusPosts.add(newPost);
+        map.getOverlays().remove(0);
+        map.getOverlays().add(locationNewOverlay);
+    }
+
+    public void isUserInPost()
+    {
+        for (int i = 0; i < postRenderer.radiusPosts.size(); i++){
+
+        }
     }
 
     //OPEN STREET MAPS FUNCTIONS
