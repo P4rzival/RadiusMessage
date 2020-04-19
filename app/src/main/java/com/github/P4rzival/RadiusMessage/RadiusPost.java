@@ -5,15 +5,17 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.Polygon;
 
 import java.util.Random;
 
-public class RadiusPost extends Marker {
+public class RadiusPost extends Polygon {
 
-    private Paint paint;
+    public Paint paint;
     public boolean isPressed = false;
     private drawData postData;
 
@@ -39,14 +41,13 @@ public class RadiusPost extends Marker {
         }
     }
 
-    @Override
-    public void draw(Canvas canvas, MapView map, boolean shadow){
-        if(!isEnabled()) return;
-
-
-        canvas.drawCircle((float) 0
-                , (float)0
-                , (float) postData.getRadius(),
-                paint);
+    public void drawMapPost(GeoPoint messageLocation, MapView mapView){
+        this.setPoints(Polygon.pointsAsCircle(messageLocation, postData.getRadius()));
+        this.setFillColor(paint.getColor());
+        this.setStrokeColor(paint.getColor());
+        this.setStrokeWidth(1);
+        mapView.getOverlays().add(this);
+        mapView.invalidate();
     }
+
 }

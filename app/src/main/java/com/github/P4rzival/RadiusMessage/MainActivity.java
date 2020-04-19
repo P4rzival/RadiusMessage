@@ -165,16 +165,14 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         //postRenderer.postList.add(newPost);
         //MARKER TEST
         GeoPoint messageLocation = locationNewOverlay.getMyLocation();
-        Drawable nodeIcon = getResources().getDrawable(R.drawable.marker_default);
+        /*Drawable nodeIcon = getResources().getDrawable(R.drawable.marker_default);
         Marker newMarker = new Marker(map);
         newMarker.setPosition(messageLocation);
         newMarker.setIcon(nodeIcon);
-        map.getOverlays().add(newMarker);
+        map.getOverlays().add(newMarker);*/
 
-        newPost.setPosition(messageLocation);
-        //newPost.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+        newPost.drawMapPost(messageLocation, map);
         postRenderer.radiusPosts.add(newPost);
-        map.getOverlays().add(newPost);
     }
 
     //For demo 1 keep commented out
