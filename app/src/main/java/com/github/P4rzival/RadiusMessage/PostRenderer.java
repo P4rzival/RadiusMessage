@@ -19,6 +19,7 @@ public class PostRenderer extends ViewModel {
     private drawDataRepository drawRepository;
     private LiveData<List<drawData>> allPostDrawData;
     public ArrayList<Post> postList = new ArrayList<Post>();
+    public ArrayList<RadiusPost> radiusPosts = new ArrayList<RadiusPost>();
 
     public PostRenderer(){
         drawRepository = new drawDataRepository(RadiusMessage.getAppInstance());
