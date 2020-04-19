@@ -34,6 +34,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
@@ -46,12 +47,14 @@ import java.lang.Math;
 import org.osmdroid.config.*;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-public class MainActivity extends AppCompatActivity implements TextPostDialog.TextPostDialogListener {
+public class MainActivity extends AppCompatActivity implements TextPostDialog.TextPostDialogListener, MapEventsReceiver {
 
     public ConstraintLayout parentLayout;
     public PostRenderer postRenderer;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private MapView map = null;
     private MyLocationNewOverlay locationNewOverlay;
+    private MapEventsOverlay mapEventsOverlay;
     private Location user_location;
 
     //May need for later
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         org.osmdroid.config.Configuration.getInstance().load(appContext, PreferenceManager.getDefaultSharedPreferences(appContext));
         setContentView(R.layout.activity_main);
 
+        //MAP SETUP
         map = (MapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
 
@@ -92,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
 
         IMapController mapController = map.getController();
         mapController.setZoom(19);
+
+        mapEventsOverlay = new MapEventsOverlay(this,this);
+        map.getOverlays().add(mapEventsOverlay);
 
         locationNewOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(appContext), map);
         locationNewOverlay.enableFollowLocation();
@@ -154,22 +162,20 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         postDrawer.createPost(test);
     }
 
-
+    //Have to add and remove overlays in order to have the map input overlay detecting input on top
     public void addPostToView(drawData newPostDrawData){
         RadiusPost newPost = new RadiusPost(map, newPostDrawData,parentLayout);
         GeoPoint messageLocation = locationNewOverlay.getMyLocation();
+
         newPost.drawMapPost(messageLocation, map);
+        map.getOverlays().remove(locationNewOverlay);
+        map.getOverlays().remove(mapEventsOverlay);
         postRenderer.radiusPosts.add(newPost);
-        map.getOverlays().remove(0);
         map.getOverlays().add(locationNewOverlay);
+        map.getOverlays().add(mapEventsOverlay);
     }
 
-    public void isUserInPost()
-    {
-        for (int i = 0; i < postRenderer.radiusPosts.size(); i++){
 
-        }
-    }
 
     //OPEN STREET MAPS FUNCTIONS
     @Override
@@ -215,10 +221,68 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         map.onPause();
     }
 
-    public void addMapToView(Context applicationContext){
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //map = new MapView(inflater.getContext(),, applicationContext);
+    @Override
+    public boolean singleTapConfirmedHelper(GeoPoint p) {
+        currentPost = getPostToOpen(p);
+        if(currentPost != null){
+            currentPost.openPostPopup();
+        }
+        return true;
     }
 
+    public RadiusPost getPostToOpen(GeoPoint tapPoint){
 
+        RadiusPost postToOpen = null;
+
+        List<RadiusPost> postsInRange = new ArrayList<>();
+
+        //First find all posts in range of tap
+        if(postRenderer.radiusPosts.size() >= 1){
+            for (int i = 0; i < postRenderer.radiusPosts.size();i++){
+                RadiusPost postToTest = postRenderer.radiusPosts.get(i);
+                if(isInGeoRadius(tapPoint, postToTest.postGeoPoint,postToTest.postData.getRadius())){
+                    postsInRange.add(postRenderer.radiusPosts.get(i));
+                }
+            }
+            //Find the smallest after that
+            postToOpen = findSmallestPostInRange(postsInRange);
+        }
+
+        return postToOpen;
+    }
+
+    public boolean isInGeoRadius(GeoPoint tapPoint, GeoPoint postPoint, double postRadius){
+
+        Location tapLocation = new Location("tap");
+        tapLocation.setLatitude(tapPoint.getLatitude());
+        tapLocation.setLongitude(tapPoint.getLongitude());
+
+        Location postLocation = new Location("post");
+        postLocation.setLatitude(postPoint.getLatitude());
+        postLocation.setLongitude(postPoint.getLongitude());
+
+        double distanceInMeters = tapLocation.distanceTo(postLocation);
+
+        if(distanceInMeters <= postRadius){
+            return true;
+        }
+        return false;
+    }
+
+    //Linear Search
+    public RadiusPost findSmallestPostInRange(List<RadiusPost> inRangePosts){
+        RadiusPost smallestPost =  inRangePosts.get(0);
+        for (int i = 0; i < inRangePosts.size(); i++){
+            if(inRangePosts.get(i).postData.getRadius() <= smallestPost.postData.getRadius()){
+                smallestPost = inRangePosts.get(i);
+            }
+        }
+        return smallestPost;
+    }
+
+    //Hold down a tap and make something happen, may be able to use later
+    @Override
+    public boolean longPressHelper(GeoPoint p) {
+        return false;
+    }
 }
