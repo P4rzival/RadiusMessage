@@ -12,6 +12,8 @@ public class PostRequestSupervisor {
 
     JSONObject post;
 
+    DatabaseAccessor databaseAccessor;
+
     long timeoutCounter = 0l;
 
     static ArrayDeque<PostRequestSupervisor> waitingPostRequestSupervisors
@@ -21,6 +23,7 @@ public class PostRequestSupervisor {
         prsContinueFalse();
         this.post = newPost;
         timeoutCounter = 0;
+        databaseAccessor = new DatabaseAccessor();
         waitingPostRequestSupervisors.add(this);
         new SpinlockTask().execute(this);
     }
@@ -33,7 +36,7 @@ public class PostRequestSupervisor {
         @Override
         protected Integer doInBackground(PostRequestSupervisor... postRequestSupervisors) {
 
-            DatabaseAccessor.databaseRequestApproval(postRequestSupervisors[0]);
+            databaseAccessor.databaseRequestApproval(postRequestSupervisors[0]);
 
             // Spinlock
             while(!prsContinue())

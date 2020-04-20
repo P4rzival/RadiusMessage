@@ -38,6 +38,7 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         }
 
         PostDrawer postDrawer = new PostDrawer();
-        postDrawer.createPost(test);
+        RequestGenerator.generateRequest(test);
     }
 
     //Have to add and remove overlays in order to have the map input overlay detecting input on top
@@ -283,6 +284,15 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     //Hold down a tap and make something happen, may be able to use later
     @Override
     public boolean longPressHelper(GeoPoint p) {
+        GeoPoint messageLocation = locationNewOverlay.getMyLocation();
+
+        try {
+            DatabaseAccessor.getPostsFromLocation(messageLocation.getLatitude(),
+                    messageLocation.getLongitude());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 }
