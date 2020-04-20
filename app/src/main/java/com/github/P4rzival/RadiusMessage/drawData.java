@@ -19,14 +19,14 @@ public class drawData
 
     //Overloading for options when creating drawData or if we need to update one.
 
-    public drawData(String userMessageText, float radius, float locationX, float locationY, long messageDuration) {
+    public drawData(String userMessageText, Double radius, Double locationX, Double locationY, long messageDuration) {
         this.userMessageText = userMessageText;
         this.radius = radius;
         this.locationX = locationX;
         this.locationY = locationY;
         this.messageDuration = messageDuration;
     }
-
+    @Ignore
     public drawData() {
     }
 
