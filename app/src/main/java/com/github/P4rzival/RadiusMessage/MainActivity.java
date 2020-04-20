@@ -105,23 +105,26 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         locationNewOverlay.enableFollowLocation();
         map.getOverlays().add(locationNewOverlay);
 
-
         //Need this in main activity for postRenderer to work.
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
-        //For the Demo
-        postRenderer.deleteAllData();
+
+        //UNCOMMENT LINE 113 TO DELETE POSTS ON START UP
+        //postRenderer.deleteAllData();
         postRenderer.getAllPostDrawData().observe(this, new Observer<List<drawData>>() {
             @Override
             public void onChanged(List<drawData> drawData) {
                 if(drawData != null && drawData.size() > 0)
                 {
-                    addPostToView(drawData.get(drawData.size()-1));
+
+                    //addPostToView(drawData.get(drawData.size()-1));
                 }
+                updatePostMap(drawData);
                 Toast.makeText(MainActivity.this
                         , "Post Map Updated"
                         , Toast.LENGTH_SHORT).show();
             }
+
         });
         //End of PostRenderer stuff needed in onCreate
 
@@ -165,9 +168,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     //Have to add and remove overlays in order to have the map input overlay detecting input on top
     public void addPostToView(drawData newPostDrawData){
         RadiusPost newPost = new RadiusPost(map, newPostDrawData,parentLayout);
-        GeoPoint messageLocation = locationNewOverlay.getMyLocation();
-
-        newPost.drawMapPost(messageLocation, map);
+        newPost.drawMapPost(map);
         map.getOverlays().remove(locationNewOverlay);
         map.getOverlays().remove(mapEventsOverlay);
         postRenderer.radiusPosts.add(newPost);
@@ -175,7 +176,22 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         map.getOverlays().add(mapEventsOverlay);
     }
 
+    public void updatePostMap(List<drawData> currentDrawData) {
+        map.getOverlays().remove(locationNewOverlay);
+        map.getOverlays().remove(mapEventsOverlay);
+        for (int i = 0; i <currentDrawData.size(); i++){
+            RadiusPost newPost = new RadiusPost(map, currentDrawData.get(i),parentLayout);
+            newPost.drawMapPost(map);
 
+            if(!postRenderer.radiusPosts.contains(newPost)){
+                postRenderer.radiusPosts.add(newPost);
+            }
+
+        }
+        map.getOverlays().add(locationNewOverlay);
+        map.getOverlays().add(mapEventsOverlay);
+
+    }
 
     //OPEN STREET MAPS FUNCTIONS
     @Override
@@ -245,7 +261,9 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
                 }
             }
             //Find the smallest after that
-            postToOpen = findSmallestPostInRange(postsInRange);
+            if(postsInRange.size() >=1){
+                postToOpen = findSmallestPostInRange(postsInRange);
+            }
         }
 
         return postToOpen;
