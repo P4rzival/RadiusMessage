@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
 
         //UNCOMMENT LINE 113 TO DELETE POSTS ON START UP
-        //postRenderer.deleteAllData();
+        postRenderer.deleteAllData();
         postRenderer.getAllPostDrawData().observe(this, new Observer<List<drawData>>() {
             @Override
             public void onChanged(List<drawData> drawData) {
