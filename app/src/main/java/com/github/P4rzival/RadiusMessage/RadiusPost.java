@@ -42,6 +42,8 @@ public class RadiusPost extends Polygon {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         postData = newDrawData;
         popupParentLayout = parentLayout;
+        GeoPoint messageLocation = new GeoPoint( postData.getLocationY(), postData.getLocationX());
+        postGeoPoint = messageLocation;
 
         Random rNumber = new Random();
         int a = 1;
@@ -59,15 +61,14 @@ public class RadiusPost extends Polygon {
         }
     }
 
-    public void drawMapPost(GeoPoint messageLocation, MapView mapView){
+    public void drawMapPost(MapView mapView){
 
-        postGeoPoint = messageLocation;
         paint.setAlpha(130);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             paint.setBlendMode(BlendMode.PLUS);
         }
+        this.setPoints(Polygon.pointsAsCircle(postGeoPoint, postData.getRadius()));
 
-        this.setPoints(Polygon.pointsAsCircle(messageLocation, postData.getRadius()));
         this.setFillColor(paint.getColor());
         this.setStrokeColor(paint.getColor());
         this.setStrokeWidth(1);
