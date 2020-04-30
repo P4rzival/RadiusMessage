@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,12 +20,40 @@ public class TextPostDialog extends AppCompatDialogFragment {
     private EditText editPostDuration;
     private TextPostDialogListener listener;
 
+    private static SeekBar radiusBar;
+    private static TextView radiusView;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_dialog, null);
+
+        radiusBar = (SeekBar) view.findViewById(R.id.radiusBar);
+        radiusView = (TextView) view.findViewById(R.id.radiusView);
+
+
+
+
+        radiusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int barProgress;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            barProgress = progress;
+            radiusView.setText("Radius: " + radiusBar.getProgress() + " Meters");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                radiusView.setText("Radius: " + radiusBar.getProgress() + " Meters");
+            }
+        });
 
         builder.setView(view).setTitle("TextPost").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
