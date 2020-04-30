@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class TextPostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
-    private EditText editPostRadius;
     private EditText editPostDuration;
     private TextPostDialogListener listener;
 
@@ -64,13 +63,12 @@ public class TextPostDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String postText = editPostText.getText().toString();
-                int postRadius = Integer.parseInt(editPostRadius.getText().toString());
+                int postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
                 int postDuration = Integer.parseInt(editPostDuration.getText().toString());
                 listener.applyTexts(postText, postRadius, postDuration);
             }
         });
         editPostText = view.findViewById(R.id.edit_textPost);
-        editPostRadius = view.findViewById(R.id.edit_radius);
         editPostDuration = view.findViewById(R.id.edit_duration);
         return builder.create();
     }
