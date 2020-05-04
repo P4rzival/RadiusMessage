@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
             e.printStackTrace();
         }
 
-        RequestGenerator.generateRequest(postText, postRadius, postDuration);
+        RequestGenerator.generateRequest(test);
     }
 
     //Have to add and remove overlays in order to have the map input overlay detecting input on top
