@@ -1,3 +1,4 @@
+
 package com.github.P4rzival.RadiusMessage;
 
 import android.content.Context;
@@ -73,8 +74,8 @@ public class RadiusPost extends Polygon {
         this.setStrokeColor(paint.getColor());
         this.setStrokeWidth(1);
 
-        //List<Overlay> overlays = mapView.getOverlays();
-        //sortedInsertion(mapView, overlays);
+        
+
         mapView.getOverlays().add(this);
     }
 
@@ -146,10 +147,13 @@ public class RadiusPost extends Polygon {
         final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
         window.showAtLocation(popupParentLayout, Gravity.CENTER, 0,0);
 
-        //Add text to popup from user input
+        //Add text to popup from user input->change thing here?
         TextView currentText = window
                 .getContentView()
                 .findViewById(R.id.messageTextView);
+
+        
+
 
         currentText.setText(postData.getUserMessageText());
         newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
