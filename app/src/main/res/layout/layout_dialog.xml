@@ -10,19 +10,20 @@
         android:hint="Enter Text to Post" />
 
 
-    <EditText
-        android:id="@+id/edit_duration"
-        android:inputType="number"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/timeView"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Time Duration: 0-100 Hours"
         android:layout_below="@id/edit_textPost"
-        android:hint="Enter Duration of Post (In Hours)" />
+        />
 
     <SeekBar
-        android:id="@+id/radiusBar"
+        android:id="@+id/timeBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/radiusView"
+        android:layout_below="@id/timeView"
         />
 
     <TextView
@@ -31,6 +32,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Radius: 0-100 Meters"
-        android:layout_below="@id/edit_duration"
+        android:layout_below="@id/timeBar"
         />
+    <SeekBar
+        android:id="@+id/radiusBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radiusView"
+        />
+
 </RelativeLayout>
