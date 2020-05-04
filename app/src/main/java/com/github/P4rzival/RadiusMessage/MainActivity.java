@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     @Override
     public void applyTexts(String postText, int postRadius, int postDuration) {
         JSONObject test = new JSONObject();
-        Random rNum = new Random();
         GeoPoint messageLocation = locationNewOverlay.getMyLocation();
         try {
             test.put("userTextMessage", postText);
