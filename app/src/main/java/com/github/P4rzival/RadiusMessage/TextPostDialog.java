@@ -16,9 +16,10 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class TextPostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
-    private EditText editPostDuration;
     private TextPostDialogListener listener;
 
+    private static SeekBar timeBar;
+    private static TextView timeView;
     private static SeekBar radiusBar;
     private static TextView radiusView;
 
@@ -29,11 +30,30 @@ public class TextPostDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_dialog, null);
 
+        timeBar = (SeekBar) view.findViewById(R.id.timeBar);
+        timeView = (TextView) view.findViewById(R.id.timeView);
+
+        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int timeProgress;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                timeProgress = progress;
+                timeView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                radiusView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
+            }
+        });
+
         radiusBar = (SeekBar) view.findViewById(R.id.radiusBar);
         radiusView = (TextView) view.findViewById(R.id.radiusView);
-
-
-
 
         radiusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int barProgress;
@@ -63,13 +83,31 @@ public class TextPostDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String postText = editPostText.getText().toString();
-                int postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
-                int postDuration = Integer.parseInt(editPostDuration.getText().toString());
+                int postRadius;
+                int postDuration;
+
+                if (timeView.getText().toString().compareTo("Time Duration: 0-100 Hours") == 0)
+                {
+                    postDuration = 0;
+                }
+                else
+                {
+                    postDuration = Integer.parseInt(timeView.getText().toString().replaceAll("\\D+",""));
+                }
+
+                if (radiusView.getText().toString().compareTo("Radius: 0-100 Meters") == 0)
+                {
+                    postRadius = 0;
+                }
+                else
+                {
+                    postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
+                }
+                
                 listener.applyTexts(postText, postRadius, postDuration);
             }
         });
         editPostText = view.findViewById(R.id.edit_textPost);
-        editPostDuration = view.findViewById(R.id.edit_duration);
         return builder.create();
     }
 
