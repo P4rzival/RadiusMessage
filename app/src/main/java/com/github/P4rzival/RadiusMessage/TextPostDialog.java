@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -14,9 +16,12 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class TextPostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
-    private EditText editPostRadius;
-    private EditText editPostDuration;
     private TextPostDialogListener listener;
+
+    private static SeekBar timeBar;
+    private static TextView timeView;
+    private static SeekBar radiusBar;
+    private static TextView radiusView;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -24,6 +29,50 @@ public class TextPostDialog extends AppCompatDialogFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_dialog, null);
+
+        timeBar = (SeekBar) view.findViewById(R.id.timeBar);
+        timeView = (TextView) view.findViewById(R.id.timeView);
+
+        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int timeProgress;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                timeProgress = progress;
+                timeView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                radiusView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
+            }
+        });
+
+        radiusBar = (SeekBar) view.findViewById(R.id.radiusBar);
+        radiusView = (TextView) view.findViewById(R.id.radiusView);
+
+        radiusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int barProgress;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            barProgress = progress;
+            radiusView.setText("Radius: " + radiusBar.getProgress() + " Meters");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                radiusView.setText("Radius: " + radiusBar.getProgress() + " Meters");
+            }
+        });
 
         builder.setView(view).setTitle("TextPost").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
@@ -34,14 +83,31 @@ public class TextPostDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String postText = editPostText.getText().toString();
-                int postRadius = Integer.parseInt(editPostRadius.getText().toString());
-                int postDuration = Integer.parseInt(editPostDuration.getText().toString());
+                int postRadius;
+                int postDuration;
+
+                if (timeView.getText().toString().compareTo("Time Duration: 0-100 Hours") == 0)
+                {
+                    postDuration = 0;
+                }
+                else
+                {
+                    postDuration = Integer.parseInt(timeView.getText().toString().replaceAll("\\D+",""));
+                }
+
+                if (radiusView.getText().toString().compareTo("Radius: 0-100 Meters") == 0)
+                {
+                    postRadius = 0;
+                }
+                else
+                {
+                    postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
+                }
+                
                 listener.applyTexts(postText, postRadius, postDuration);
             }
         });
         editPostText = view.findViewById(R.id.edit_textPost);
-        editPostRadius = view.findViewById(R.id.edit_radius);
-        editPostDuration = view.findViewById(R.id.edit_duration);
         return builder.create();
     }
 

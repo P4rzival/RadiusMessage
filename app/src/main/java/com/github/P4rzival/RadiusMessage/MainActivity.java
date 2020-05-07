@@ -88,21 +88,20 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
 
     @Override
     public void applyTexts(String postText, int postRadius, int postDuration) {
-        JSONObject test = new JSONObject();
-        Random rNum = new Random();
-        GeoPoint messageLocation = mapActivity.getMyLocationOnMap();
+
+        JSONObject post = new JSONObject();
+        GeoPoint messageLocation = locationNewOverlay.getMyLocation();
         try {
-            test.put("userTextMessage", postText);
-            test.put("radius", postRadius);
-            test.put("locationX", messageLocation.getLongitude());
-            test.put("locationY", messageLocation.getLatitude());
-            test.put("messageDuration", postDuration);
+            post.put("userTextMessage", postText);
+            post.put("radius", postRadius);
+            post.put("locationX", messageLocation.getLongitude());
+            post.put("locationY", messageLocation.getLatitude());
+            post.put("messageDuration", postDuration);
         }catch (JSONException e){
             e.printStackTrace();
         }
 
-        PostDrawer postDrawer = new PostDrawer();
-        postDrawer.createPost(test);
+        RequestGenerator.generateRequest(post);
     }
 
     public void updatePostMap(List<drawData> currentDrawData) {
