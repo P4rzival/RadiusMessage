@@ -16,7 +16,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
     private MapEventsOverlay mapEventsOverlay;
     private Location userLocation;
 
-    private LocationManager userLocationManager;
+    private UserLocationManager userLocationManager;
 
     public ArrayList<RadiusPost> listOfPosts;
     private RadiusPost currentPost;
@@ -58,14 +57,17 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
 
         initMapControl();
 
-        userLocationManager = LocationManager.getInstance();
-
-        mapEventsOverlay = new MapEventsOverlay(appContext,this);
+        mapEventsOverlay = new MapEventsOverlay(this,this);
         map.getOverlays().add(mapEventsOverlay);
 
-        locationNewOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(appContext), map);
+        userLocationManager = UserLocationManager.getInstance();
+        //userLocationManager.StartLocationTracking(map);
+
+        locationNewOverlay = new MyLocationNewOverlay(userLocationManager.userGPSLocationProvider, map);
+        locationNewOverlay.enableMyLocation(userLocationManager.userGPSLocationProvider);
         locationNewOverlay.enableFollowLocation();
         map.getOverlays().add(locationNewOverlay);
+        map.invalidate();
 
     }
 
@@ -105,7 +107,11 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
-        return false;
+        currentPost = getPostToOpen(p);
+        if(currentPost != null && isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius())){
+            currentPost.openPostPopup();
+        }
+        return true;
     }
 
     @Override
