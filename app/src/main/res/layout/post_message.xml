@@ -13,17 +13,13 @@
         android:textColor="@android:color/black"
         android:text="TextView" />
 
-    <EditText
-        android:id="@+id/editText"
+    <TextView
+        android:id="@+id/messageTimeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="time" />
+        android:layout_centerInParent="true"
+        android:textSize="28sp"
+        android:textColor="@android:color/black"
+        android:text="TextView" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number" />
 </RelativeLayout>
