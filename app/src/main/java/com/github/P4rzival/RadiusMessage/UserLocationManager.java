@@ -44,7 +44,7 @@ public class UserLocationManager {
 
     public GeoPoint getCurrentLocationAsGeoPoint(){
         userLocation = userGPSLocationProvider.getLastKnownLocation();
-        userGeoPoint = new GeoPoint(userLocation.getLongitude(),userLocation.getLatitude());
+        userGeoPoint = new GeoPoint(userLocation.getLatitude(),userLocation.getLongitude());
         return  userGeoPoint;
     }
 

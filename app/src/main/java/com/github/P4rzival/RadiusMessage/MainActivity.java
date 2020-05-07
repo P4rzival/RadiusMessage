@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     public void applyTexts(String postText, int postRadius, int postDuration) {
 
         JSONObject post = new JSONObject();
-        GeoPoint messageLocation = locationNewOverlay.getMyLocation();
+        GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
         try {
             post.put("userTextMessage", postText);
             post.put("radius", postRadius);
