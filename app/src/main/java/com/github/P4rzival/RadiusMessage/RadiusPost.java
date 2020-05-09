@@ -122,7 +122,14 @@ public class RadiusPost extends Polygon {
                 .getContentView()
                 .findViewById(R.id.messageTextView);
 
-        currentText.setText(postData.getUserMessageText());
+        if (true)
+        {
+            currentText.setText(postData.getUserMessageText());
+        }
+        else
+        {
+            currentText.setText("This post is too far away to view! \n Please step inside the radius to view this post.");
+        }
         newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

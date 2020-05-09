@@ -48,7 +48,7 @@ public class TextPostDialog extends AppCompatDialogFragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                radiusView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
+                timeView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
             }
         });
 

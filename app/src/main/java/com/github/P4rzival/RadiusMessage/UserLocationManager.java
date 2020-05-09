@@ -56,4 +56,22 @@ public class UserLocationManager {
         return instance;
     }
 
+    public boolean isInGeoRadius(GeoPoint tapPoint, GeoPoint postPoint, double postRadius){
+
+        Location tapLocation = new Location("tap");
+        tapLocation.setLatitude(tapPoint.getLatitude());
+        tapLocation.setLongitude(tapPoint.getLongitude());
+
+        Location postLocation = new Location("post");
+        postLocation.setLatitude(postPoint.getLatitude());
+        postLocation.setLongitude(postPoint.getLongitude());
+
+        double distanceInMeters = tapLocation.distanceTo(postLocation);
+
+        if(distanceInMeters <= postRadius){
+            return true;
+        }
+        return false;
+    }
+
 }
