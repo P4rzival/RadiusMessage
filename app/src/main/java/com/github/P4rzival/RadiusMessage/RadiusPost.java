@@ -123,6 +123,7 @@ public class RadiusPost extends Polygon {
                 .findViewById(R.id.messageTextView);
 
         currentText.setText(postData.getUserMessageText());
+
         newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

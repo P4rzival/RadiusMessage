@@ -108,7 +108,7 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
         currentPost = getPostToOpen(p);
-        if(currentPost != null && isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius())){
+        if(currentPost != null && UserLocationManager.getInstance().isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius())){
             currentPost.openPostPopup();
         }
         return true;
@@ -160,7 +160,7 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         if (listOfPosts.size() >= 1) {
             for (int i = 0; i < listOfPosts.size(); i++) {
                 RadiusPost postToTest = listOfPosts.get(i);
-                if (isInGeoRadius(tapPoint, postToTest.postGeoPoint, postToTest.postData.getRadius())) {
+                if (UserLocationManager.getInstance().isInGeoRadius(tapPoint, postToTest.postGeoPoint, postToTest.postData.getRadius())) {
                     postsInRange.add(listOfPosts.get(i));
                 }
             }
@@ -171,24 +171,6 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         }
 
         return postToOpen;
-    }
-
-    public boolean isInGeoRadius(GeoPoint tapPoint, GeoPoint postPoint, double postRadius){
-
-        Location tapLocation = new Location("tap");
-        tapLocation.setLatitude(tapPoint.getLatitude());
-        tapLocation.setLongitude(tapPoint.getLongitude());
-
-        Location postLocation = new Location("post");
-        postLocation.setLatitude(postPoint.getLatitude());
-        postLocation.setLongitude(postPoint.getLongitude());
-
-        double distanceInMeters = tapLocation.distanceTo(postLocation);
-
-        if(distanceInMeters <= postRadius){
-            return true;
-        }
-        return false;
     }
 
     public RadiusPost findSmallestPostInRange(List<RadiusPost> inRangePosts){

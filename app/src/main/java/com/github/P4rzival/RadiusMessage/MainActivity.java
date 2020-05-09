@@ -27,11 +27,9 @@ import org.osmdroid.util.GeoPoint;
 
 
 import java.util.List;
-import java.util.Random;
 
 
-
-public class MainActivity extends AppCompatActivity implements TextPostDialog.TextPostDialogListener {
+public class MainActivity extends AppCompatActivity implements PostDialog.TextPostDialogListener {
 
     public ConstraintLayout parentLayout;
 
@@ -82,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     }
 
     public void openDialog() {
-        TextPostDialog textPostDialog = new TextPostDialog();
-        textPostDialog.show(getSupportFragmentManager(), "Example TextPost");
+        PostDialog postDialog = new PostDialog();
+        postDialog.show(getSupportFragmentManager(), "Example TextPost");
     }
 
     @Override
