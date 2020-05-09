@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class TextPostDialog extends AppCompatDialogFragment {
+public class PostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
     private TextPostDialogListener listener;
 
