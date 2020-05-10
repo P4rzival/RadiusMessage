@@ -86,18 +86,18 @@ public class PostDialog extends AppCompatDialogFragment {
                 int postRadius;
                 int postDuration;
 
-                if (timeView.getText().toString().compareTo("Time Duration: 0-100 Hours") == 0)
+                if (timeView.getText().toString().compareTo("Time Duration: 1-100 Hours") == 0)
                 {
-                    postDuration = 0;
+                    postDuration = 1;
                 }
                 else
                 {
                     postDuration = Integer.parseInt(timeView.getText().toString().replaceAll("\\D+",""));
                 }
 
-                if (radiusView.getText().toString().compareTo("Radius: 0-100 Meters") == 0)
+                if (radiusView.getText().toString().compareTo("Radius: 1-100 Meters") == 0)
                 {
-                    postRadius = 0;
+                    postRadius = 1;
                 }
                 else
                 {
