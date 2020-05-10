@@ -24,15 +24,12 @@
         android:layout_marginLeft="150dp"
         android:layout_marginRight="100dp"
         android:layout_marginBottom="100dp"
-        android:text="+"
-        android:textColor="#FFFFFF"
-        android:textSize="60dp"
         android:textAlignment="gravity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/circle_button"
+        android:background="@drawable/ic_plus_circle"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
