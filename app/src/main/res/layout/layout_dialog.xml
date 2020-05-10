@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time Delay to Publish Post: 0-100 Minutes"
+        android:text="Time Delay to Publish Post: 0-100 Minute(s)"
         android:layout_below="@id/edit_textPost"
         />
 
@@ -32,7 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time Duration: 1-100 Hours"
+        android:text="Time Duration: 1-100 Hour(s)"
         android:layout_below="@id/delayBar"
         />
 
@@ -48,7 +48,7 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Radius: 1-100 Meters"
+        android:text="Radius: 1-100 Meter(s)"
         android:layout_below="@id/timeBar"
         />
     <SeekBar

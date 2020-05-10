@@ -40,7 +40,7 @@ public class PostDialog extends AppCompatDialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 delayProgress = progress;
-                delayView.setText("Time Delay to Publish Post: " + delayBar.getProgress() + " Minutes");
+                delayView.setText("Time Delay to Publish Post: " + delayBar.getProgress() + " Minute(s)");
             }
 
             @Override
@@ -50,7 +50,7 @@ public class PostDialog extends AppCompatDialogFragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                delayView.setText("Time Delay to Publish Post: " + delayBar.getProgress() + " Minutes");
+                delayView.setText("Time Delay to Publish Post: " + delayBar.getProgress() + " Minute(s)");
             }
         });
 
@@ -63,7 +63,7 @@ public class PostDialog extends AppCompatDialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 timeProgress = progress;
-                timeView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
+                timeView.setText("Time Duration: " + timeBar.getProgress() + " Hour(s)");
             }
 
             @Override
@@ -73,7 +73,7 @@ public class PostDialog extends AppCompatDialogFragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                timeView.setText("Time Duration: " + timeBar.getProgress() + " Hours");
+                timeView.setText("Time Duration: " + timeBar.getProgress() + " Hour(s)");
             }
         });
 
@@ -85,7 +85,7 @@ public class PostDialog extends AppCompatDialogFragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             barProgress = progress;
-            radiusView.setText("Radius: " + radiusBar.getProgress() + " Meters");
+            radiusView.setText("Radius: " + radiusBar.getProgress() + " Meter(s)");
             }
 
             @Override
@@ -95,7 +95,7 @@ public class PostDialog extends AppCompatDialogFragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                radiusView.setText("Radius: " + radiusBar.getProgress() + " Meters");
+                radiusView.setText("Radius: " + radiusBar.getProgress() + " Meter(s)");
             }
         });
 
@@ -112,7 +112,7 @@ public class PostDialog extends AppCompatDialogFragment {
                 int postDuration;
                 int postDelay;
 
-                if (delayView.getText().toString().compareTo("Time Delay to Publish Post: 0-100 Minutes") == 0)
+                if (delayView.getText().toString().compareTo("Time Delay to Publish Post: 0-100 Minute(s)") == 0)
                 {
                     postDelay = 0;
                 }
@@ -121,7 +121,7 @@ public class PostDialog extends AppCompatDialogFragment {
                     postDelay = Integer.parseInt(delayView.getText().toString().replaceAll("\\D+",""));
                 }
 
-                if (timeView.getText().toString().compareTo("Time Duration: 1-100 Hours") == 0)
+                if (timeView.getText().toString().compareTo("Time Duration: 1-100 Hour(s)") == 0)
                 {
                     postDuration = 1;
                 }
@@ -130,7 +130,7 @@ public class PostDialog extends AppCompatDialogFragment {
                     postDuration = Integer.parseInt(timeView.getText().toString().replaceAll("\\D+",""));
                 }
 
-                if (radiusView.getText().toString().compareTo("Radius: 1-100 Meters") == 0)
+                if (radiusView.getText().toString().compareTo("Radius: 1-100 Meter(s)") == 0)
                 {
                     postRadius = 1;
                 }
