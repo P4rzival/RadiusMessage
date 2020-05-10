@@ -25,7 +25,7 @@ public class PostDialog extends AppCompatDialogFragment {
     private static SeekBar radiusBar;
     private static TextView radiusView;
 
-    ImageView uploadImage;
+    ImageView imageToUpload;
     ImageButton cameraButton;
     ImageButton galleryButton;
 
@@ -80,9 +80,9 @@ public class PostDialog extends AppCompatDialogFragment {
             }
         });
 
-
-
-
+        imageToUpload = (ImageView) view.findViewById(R.id.imageToUpload);
+        galleryButton = (ImageButton) view.findViewById(R.id.galleryButton);
+        cameraButton = (ImageButton) view.findViewById(R.id.cameraButton);
 
         builder.setView(view).setTitle("Make a Post!").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
