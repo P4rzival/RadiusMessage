@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -22,6 +24,10 @@ public class PostDialog extends AppCompatDialogFragment {
     private static TextView timeView;
     private static SeekBar radiusBar;
     private static TextView radiusView;
+
+    ImageView uploadImage;
+    ImageButton cameraButton;
+    ImageButton galleryButton;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -74,7 +80,11 @@ public class PostDialog extends AppCompatDialogFragment {
             }
         });
 
-        builder.setView(view).setTitle("TextPost").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+
+
+
+        builder.setView(view).setTitle("Make a Post!").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

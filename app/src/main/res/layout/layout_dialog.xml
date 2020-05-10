@@ -46,17 +46,34 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@+id/radiusBar"
-        android:layout_marginHorizontal="200dp"
+android:layout_toRightOf="@+id/spacer"
         android:background="@drawable/ic_camera"
         />
 
     <ImageButton
-        android:id="@+id/uploadButton"
+        android:id="@+id/spacer"
+        android:layout_width="20dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/radiusBar"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        />
+
+    <ImageButton
+        android:id="@+id/galleryButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@+id/radiusBar"
-        android:layout_marginHorizontal="90dp"
-        android:background="@drawable/ic_upload"
+        android:layout_toLeftOf="@+id/spacer"
+        android:background="@drawable/ic_gallery"
+        />
+    
+    <ImageView
+        android:id="@+id/imageToUpload"
+        android:foregroundGravity="center_horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/galleryButton"
         />
 
 </RelativeLayout>
