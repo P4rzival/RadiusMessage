@@ -18,6 +18,8 @@ public class PostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
     private TextPostDialogListener listener;
 
+    private static SeekBar delayBar;
+    private static TextView delayView;
     private static SeekBar timeBar;
     private static TextView timeView;
     private static SeekBar radiusBar;
@@ -29,6 +31,29 @@ public class PostDialog extends AppCompatDialogFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_dialog, null);
+
+        delayBar = (SeekBar) view.findViewById(R.id.delayBar);
+        delayView = (TextView) view.findViewById(R.id.delayView);
+
+        delayBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int delayProgress;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                delayProgress = progress;
+                delayView.setText("Time Delay to Publish Post: " + delayBar.getProgress() + " Minutes");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                delayView.setText("Time Delay to Publish Post: " + delayBar.getProgress() + " Minutes");
+            }
+        });
+
 
         timeBar = (SeekBar) view.findViewById(R.id.timeBar);
         timeView = (TextView) view.findViewById(R.id.timeView);
@@ -85,6 +110,16 @@ public class PostDialog extends AppCompatDialogFragment {
                 String postText = editPostText.getText().toString();
                 int postRadius;
                 int postDuration;
+                int postDelay;
+
+                if (delayView.getText().toString().compareTo("Time Delay to Publish Post: 0-100 Minutes") == 0)
+                {
+                    postDelay = 0;
+                }
+                else
+                {
+                    postDelay = Integer.parseInt(delayView.getText().toString().replaceAll("\\D+",""));
+                }
 
                 if (timeView.getText().toString().compareTo("Time Duration: 1-100 Hours") == 0)
                 {
@@ -104,9 +139,10 @@ public class PostDialog extends AppCompatDialogFragment {
                     postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
                 }
                 
-                listener.applyTexts(postText, postRadius, postDuration);
+                listener.applyTexts(postText, postRadius, postDuration, postDelay);
             }
         });
+
         editPostText = view.findViewById(R.id.edit_textPost);
         return builder.create();
     }
@@ -123,6 +159,6 @@ public class PostDialog extends AppCompatDialogFragment {
     }
 
     public interface TextPostDialogListener{
-        void applyTexts(String postText, int postRadius, int postDuration);
+        void applyTexts(String postText, int postRadius, int postDuration, int postDelay);
     }
 }
