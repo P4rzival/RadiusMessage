@@ -73,36 +73,7 @@ public class RadiusPost extends Polygon {
         this.setStrokeColor(paint.getColor());
         this.setStrokeWidth(1);
 
-        //List<Overlay> overlays = mapView.getOverlays();
-        //sortedInsertion(mapView, overlays);
         mapView.getOverlays().add(this);
-    }
-
-    //Sorted Insertion, keep in for now might be good to use for sprint 3
-    public boolean sortedInsertion(MapView mapView, List<Overlay> overlays)
-    {
-
-        if(overlays.size() <= 2){
-            mapView.getOverlays().add(2,this);
-            return false;
-        }
-        List<Polygon> polyPostsList = new ArrayList<>();
-        List<RadiusPost> radiusPostsList = new ArrayList<>();
-
-        int overlaySize = overlays.size();
-
-        for (int j = 2; j < overlaySize;j++){
-            polyPostsList.add((Polygon) overlays.get(j));
-            radiusPostsList.add((RadiusPost) polyPostsList.get(j-1));
-        }
-
-        int i = 0;
-        while (this.postData.getRadius() <= radiusPostsList.get(i).postData.getRadius()){
-            i++;
-        }
-        i++;
-        mapView.getOverlays().add(i, this);
-        return true;
     }
 
     @Override
@@ -152,6 +123,7 @@ public class RadiusPost extends Polygon {
                 .findViewById(R.id.messageTextView);
 
         currentText.setText(postData.getUserMessageText());
+
         newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
