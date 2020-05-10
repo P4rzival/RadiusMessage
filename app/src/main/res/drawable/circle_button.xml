@@ -1,8 +1,22 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <stroke android:color="#008577"
-        android:width="2dp"></stroke>
-    <solid android:color="#008577"></solid>
-    <size android:width="50dp"
-        android:height="50dp"></size>
-</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <stroke android:color="@color/colorPrimary"
+                android:width="16dp"></stroke>
+            <solid android:color="@color/colorPrimary"></solid>
+            <size android:width="64dp"
+                android:height="64dp"></size>
+        </shape>
+    </item>
+    <item
+        android:drawable="@drawable/ic_plus"
+        android:bottom="16dp"
+        android:left="16dp"
+        android:right="16dp"
+        android:top="16dp"
+        >
+    </item>
+
+</layer-list>
+
