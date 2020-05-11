@@ -1,12 +1,14 @@
 package com.github.P4rzival.RadiusMessage;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,7 +21,9 @@ import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -28,6 +32,12 @@ import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -114,14 +124,13 @@ public class RadiusPost extends Polygon {
     }
 
     public void openPostPopup() {
-
         LayoutInflater inflater = (LayoutInflater) RadiusMessage.getAppInstance().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View newMessagePopup = inflater.inflate(R.layout.post_message, null);
+        final View newMessagePopup = inflater.inflate(R.layout.post_message, null);
         imageDownloaded = (ImageView) newMessagePopup.findViewById(R.id.imageDownloaded);
         saveButton = (ImageView) newMessagePopup.findViewById(R.id.saveButton);
 
         if (postData.getImage().compareTo("") != 0) {
-            saveButton.setImageResource(R.drawable.ic_save);
+//            saveButton.setImageResource(R.drawable.ic_save);
             imageDownloaded.setImageBitmap(getBitmapFromString(postData.getImage()));
         }
 
@@ -138,6 +147,34 @@ public class RadiusPost extends Polygon {
                 .findViewById(R.id.messageTextView);
 
         currentText.setText(postData.getUserMessageText());
+
+        View.OnClickListener saveButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File path = Environment.getExternalStorageDirectory();
+                File dir = new File(path+"/RadiusMessage/");
+                dir.mkdirs();
+
+                File file = new File(dir, "new.png");
+
+                OutputStream out = null;
+                try {
+                    out = new FileOutputStream(file);
+                    getBitmapFromString(postData.getImage()).compress(Bitmap.CompressFormat.PNG, 100, out);
+                    out.flush();
+                    out.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Toast.makeText( RadiusMessage.getAppInstance().getApplicationContext()
+                        , path.toString()
+                        , Toast.LENGTH_SHORT).show();
+            }
+        };
+        saveButton.setOnClickListener(saveButtonListener);
 
         newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
             @Override

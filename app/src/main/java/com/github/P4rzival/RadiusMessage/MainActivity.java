@@ -4,10 +4,12 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
@@ -59,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         Context appContext = getApplicationContext();
         org.osmdroid.config.Configuration.getInstance().load(appContext, PreferenceManager.getDefaultSharedPreferences(appContext));
         setContentView(R.layout.activity_main);
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         //Need this in main activity for postRenderer to work.
         parentLayout = findViewById(R.id.parentLayout);

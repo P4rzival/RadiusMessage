@@ -10,7 +10,8 @@
         android:id="@+id/messageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="80dp"
         android:textSize="28sp"
         android:textColor="@android:color/black"
         android:text="TextView" />
