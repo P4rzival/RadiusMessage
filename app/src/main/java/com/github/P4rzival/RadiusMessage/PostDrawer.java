@@ -46,12 +46,14 @@ public class PostDrawer {
         double locX = newPostJSON.getDouble("locationX");
         double locY = newPostJSON.getDouble("locationY");
         long messageDur = newPostJSON.getLong("messageDuration");
+        String image = newPostJSON.getString("image");
 
         newData.setUserMessageText(message);
         newData.setRadius(radius);
         newData.setLocationX(locX);
         newData.setLocationY(locY);
         newData.setMessageDuration(messageDur);
+        newData.setImage(image);
 
         return newData;
     }

@@ -16,15 +16,17 @@ public class drawData
     private double locationX;
     private double locationY;
     private long messageDuration;
+    private String image;
 
     //Overloading for options when creating drawData or if we need to update one.
 
-    public drawData(String userMessageText, Double radius, Double locationX, Double locationY, long messageDuration) {
+    public drawData(String userMessageText, Double radius, Double locationX, Double locationY, long messageDuration, String image) {
         this.userMessageText = userMessageText;
         this.radius = radius;
         this.locationX = locationX;
         this.locationY = locationY;
         this.messageDuration = messageDuration;
+        this.image = image;
     }
     @Ignore
     public drawData() {
@@ -58,6 +60,10 @@ public class drawData
         return messageDuration;
     }
 
+    public String getImage(){
+        return image;
+    }
+
     //Used for drawData creation
     public void setUserMessageText(String userMessageText) {
         this.userMessageText = userMessageText;
@@ -77,5 +83,9 @@ public class drawData
 
     public void setMessageDuration(long messageDuration) {
         this.messageDuration = messageDuration;
+    }
+
+    public void setImage(String image){
+        this.image = image;
     }
 }

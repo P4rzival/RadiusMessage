@@ -196,8 +196,12 @@ public class PostDialog extends AppCompatDialogFragment {
                 {
                     postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
                 }
-                
-                listener.applyTexts(postText, postRadius, postDuration, postDelay, selectedImage);
+
+                try {
+                    listener.applyTexts(postText, postRadius, postDuration, postDelay, selectedImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

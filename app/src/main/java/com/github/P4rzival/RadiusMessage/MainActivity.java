@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 
 import android.widget.Button;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     public MapActivity mapActivity;
 
     Bitmap imageToUploadBitmap;
+    String imageToUploadString;
 
 
     //May need for later
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
         JSONObject post = new JSONObject();
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
+
         try {
             post.put("userTextMessage", postText);
             post.put("radius", postRadius);
@@ -103,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             post.put("locationY", messageLocation.getLatitude());
             post.put("messageDuration", postDuration);
             post.put("messageDelay", postDelay);
-            post.put("image", MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage));
+            post.put("image", getStringFromBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage)));
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -113,6 +117,17 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
+    }
+
+    private String getStringFromBitmap(Bitmap bitmapPicture) {
+        final int COMPRESSION_QUALITY = 100;
+        String encodedImage;
+        ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
+        bitmapPicture.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY,
+                byteArrayBitmapStream);
+        byte[] b = byteArrayBitmapStream.toByteArray();
+        encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+        return encodedImage;
     }
 
 }

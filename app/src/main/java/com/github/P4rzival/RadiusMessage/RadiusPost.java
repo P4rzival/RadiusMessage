@@ -1,10 +1,13 @@
 package com.github.P4rzival.RadiusMessage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
 import android.graphics.Paint;
 import android.location.Location;
 import android.os.Build;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -31,6 +35,8 @@ import java.util.Random;
 public class RadiusPost extends Polygon {
 
     ImageView imageDownloaded;
+    ImageView saveButton;
+
     public Paint paint;
     public drawData postData;
     public GeoPoint postGeoPoint;
@@ -112,6 +118,10 @@ public class RadiusPost extends Polygon {
         LayoutInflater inflater = (LayoutInflater) RadiusMessage.getAppInstance().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newMessagePopup = inflater.inflate(R.layout.post_message, null);
         imageDownloaded = (ImageView) newMessagePopup.findViewById(R.id.imageDownloaded);
+        saveButton = (ImageView) newMessagePopup.findViewById(R.id.saveButton);
+            saveButton.setImageResource(R.drawable.ic_save);
+            imageDownloaded.setImageBitmap(getBitmapFromString(postData.getImage()));
+
 
         int width = 920;
         int height = 1800;
@@ -139,6 +149,12 @@ public class RadiusPost extends Polygon {
         Toast.makeText( RadiusMessage.getAppInstance().getApplicationContext()
                 , "Post Opened."
                 , Toast.LENGTH_SHORT).show();
+    }
+
+    private Bitmap getBitmapFromString(String stringPicture) {
+        byte[] decodedString = Base64.decode(stringPicture, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 
 }
