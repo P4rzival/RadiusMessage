@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class QaPostDrawerTest {
 
@@ -18,27 +17,27 @@ public class QaPostDrawerTest {
     //May look into Factory Object Pattern in future for a possible replacement
 
     //Set Up singleton for unit testing with Mockito Libraries
-    private drawDataLocalDatabase drawLocalDB;
+    private DrawDataLocalDatabase drawLocalDB;
 
     @Before
     public void setUpSingleton() throws NoSuchFieldException, IllegalAccessException {
-        drawLocalDB = mock(drawDataLocalDatabase.class);
+        drawLocalDB = mock(DrawDataLocalDatabase.class);
         setMock(drawLocalDB);
     }
 
 
     @After
     public void resetSingleton() throws NoSuchFieldException, IllegalAccessException {
-        Field instance = drawDataLocalDatabase.class.getDeclaredField("instance");
+        Field instance = DrawDataLocalDatabase.class.getDeclaredField("instance");
         instance.setAccessible(true);
         instance.set(null,null);
     }
 
     //Mockito will allow for unit tests to "mock" certain application runtime functionality
-    private void setMock(drawDataLocalDatabase mock) throws NoSuchFieldException, IllegalAccessException {
+    private void setMock(DrawDataLocalDatabase mock) throws NoSuchFieldException, IllegalAccessException {
 
         try {
-            Field instance = drawDataLocalDatabase.class.getDeclaredField("instance");
+            Field instance = DrawDataLocalDatabase.class.getDeclaredField("instance");
             instance.setAccessible(true);
             instance.set(instance, mock);
         } catch (Exception e){

@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
+    <ImageView
+        android:id="@+id/messageImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+
     <TextView
         android:id="@+id/messageTextView"
         android:layout_width="wrap_content"
@@ -15,7 +22,7 @@
         android:textColor="@android:color/black"
         android:text="TextView" />
 
-    <ImageButton
+    <!--<ImageButton
         android:id="@+id/saveButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -33,5 +40,5 @@
         app:layout_collapseMode="parallax"
         app:layout_collapseParallaxMultiplier="0.7"
         android:layout_below="@+id/messageTextView"
-        />
+        />-->
 </RelativeLayout>

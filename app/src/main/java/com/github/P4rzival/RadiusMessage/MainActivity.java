@@ -12,12 +12,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 
 import android.widget.Button;
@@ -30,6 +32,7 @@ import org.osmdroid.util.GeoPoint;
 
 
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         //Need this in main activity for postRenderer to work.
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
-
+        postRenderer.deleteAllData();
         mapActivity = new MapActivity(appContext, postRenderer.radiusPosts, parentLayout);
 
         postRenderer.deleteAllData();
@@ -96,6 +99,10 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
         JSONObject post = new JSONObject();
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
+        String decodedImage = "";
+        if(bitmap != null){
+            decodedImage = BitmapToString(bitmap);
+        }
         try {
             post.put("userTextMessage", postText);
             post.put("radius", postRadius);
@@ -103,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             post.put("locationY", messageLocation.getLatitude());
             post.put("messageDuration", postDuration);
             post.put("messageDelay", postDelay);
+            post.put("userMessageImage", decodedImage);
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -112,6 +120,14 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
+    }
+
+    public String BitmapToString(Bitmap bitmap){
+        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bitStreamOut);
+        byte[] byteImageArray = bitStreamOut.toByteArray();
+        String convertedImage = Base64.encodeToString(byteImageArray, Base64.URL_SAFE);
+        return convertedImage;
     }
 
 }
