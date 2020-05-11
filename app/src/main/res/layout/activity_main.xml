@@ -30,4 +30,13 @@
         app:layout_constraintRight_toRightOf="parent"
         />
 
+    <Button
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/menu_button"
+        android:layout_margin="@dimen/cardview_default_elevation"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/parentLayout"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

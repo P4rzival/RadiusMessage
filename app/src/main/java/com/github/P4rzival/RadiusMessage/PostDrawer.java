@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 
 //simple class to run a task in background in order to
 //parse a JSON object, sends new drawData to the drawRepo
@@ -28,6 +30,10 @@ public class PostDrawer {
 
     public void setCurrentDrawData(drawData currentDrawData) {
         this.currentDrawData = currentDrawData;
+    }
+
+    public void clearPostList(){
+        new clearPostListAsync().execute(drawRepo);
     }
 
     //Async Task Call in createPost
@@ -54,6 +60,17 @@ public class PostDrawer {
         newData.setMessageDuration(messageDur);
 
         return newData;
+    }
+
+    //Use when refreshing server
+    public void parsePostJSONList(List<JSONObject> serverPostList) throws JSONException{
+
+        clearPostList();
+
+        for (int i = 0; i <= serverPostList.size(); i++){
+
+            parsePostJSON(serverPostList.get(i));
+        }
     }
 
     //The AsynTask class acts as sort of a function object
@@ -90,7 +107,16 @@ public class PostDrawer {
 
         @Override
         protected void onPostExecute(drawData drawData) {
-            setCurrentDrawData(drawData);
+            //setCurrentDrawData(drawData);
+        }
+    }
+
+    private class clearPostListAsync extends  AsyncTask<drawDataRepository, Void, Void>{
+
+        @Override
+        protected Void doInBackground(drawDataRepository... drawDataRepositories){
+            drawDataRepositories[0].deleteAllDrawData();
+            return null;
         }
     }
 }

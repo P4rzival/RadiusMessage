@@ -16,6 +16,7 @@ public class drawData
     private double locationX;
     private double locationY;
     private long messageDuration;
+    private boolean isCollectedByUser;
 
     //Overloading for options when creating drawData or if we need to update one.
 
@@ -25,6 +26,7 @@ public class drawData
         this.locationX = locationX;
         this.locationY = locationY;
         this.messageDuration = messageDuration;
+        this.isCollectedByUser = false;
     }
     @Ignore
     public drawData() {
@@ -77,5 +79,13 @@ public class drawData
 
     public void setMessageDuration(long messageDuration) {
         this.messageDuration = messageDuration;
+    }
+
+    public boolean isCollectedByUser() {
+        return isCollectedByUser;
+    }
+
+    public void setCollectedByUser(boolean collectedByUser) {
+        isCollectedByUser = collectedByUser;
     }
 }

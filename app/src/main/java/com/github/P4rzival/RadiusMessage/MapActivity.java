@@ -10,6 +10,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.github.P4rzival.RadiusMessage.User.UserCollectionManager;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -36,6 +38,7 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
     private Location userLocation;
 
     private UserLocationManager userLocationManager;
+    private UserCollectionManager userCollectionManager;
 
     public ArrayList<RadiusPost> listOfPosts;
     private RadiusPost currentPost;
@@ -68,6 +71,10 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         locationNewOverlay.enableFollowLocation();
         map.getOverlays().add(locationNewOverlay);
         map.invalidate();
+
+        userCollectionManager = UserCollectionManager.getInstance();
+        userCollectionManager.togglePostCollection();
+        userCollectionManager.collectPosts();
 
     }
 
@@ -102,14 +109,17 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         }
         map.getOverlays().add(locationNewOverlay);
         map.getOverlays().add(mapEventsOverlay);
-
+        userCollectionManager.radiusPosts = listOfPosts;
     }
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
         currentPost = getPostToOpen(p);
-        if(currentPost != null && UserLocationManager.getInstance().isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius())){
+        if(currentPost != null && userLocationManager.isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius())){
             currentPost.openPostPopup();
+        }
+        else if(currentPost != null && userLocationManager.isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius() ) == false){
+            //Open a popup that shows the distance to the selected post
         }
         return true;
     }
