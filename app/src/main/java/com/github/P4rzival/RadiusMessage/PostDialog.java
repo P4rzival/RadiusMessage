@@ -140,12 +140,12 @@ public class PostDialog extends AppCompatDialogFragment {
 
         galleryButton.setOnClickListener(galleryListener);
 
-        View.OnClickListener cameraListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        };
-        cameraButton.setOnClickListener(cameraListener);
+//        View.OnClickListener cameraListener = new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        };
+//        cameraButton.setOnClickListener(cameraListener);
 
         builder.setView(view).setTitle("Make a Post!").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
