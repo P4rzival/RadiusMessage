@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 public class PostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
     private TextPostDialogListener listener;
+
 
     private static SeekBar timeBar;
     private static TextView timeView;
@@ -83,6 +85,22 @@ public class PostDialog extends AppCompatDialogFragment {
         imageToUpload = (ImageView) view.findViewById(R.id.imageToUpload);
         galleryButton = (ImageButton) view.findViewById(R.id.galleryButton);
         cameraButton = (ImageButton) view.findViewById(R.id.cameraButton);
+
+        View.OnClickListener galleryListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
+        galleryButton.setOnClickListener(galleryListener);
+
+        View.OnClickListener cameraListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
+        cameraButton.setOnClickListener(cameraListener);
 
         builder.setView(view).setTitle("Make a Post!").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
