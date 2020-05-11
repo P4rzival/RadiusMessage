@@ -126,7 +126,7 @@ public class PostDialog extends AppCompatDialogFragment {
 
         imageToUpload = (ImageView) view.findViewById(R.id.imageToUpload);
         galleryButton = (ImageButton) view.findViewById(R.id.galleryButton);
-        cameraButton = (ImageButton) view.findViewById(R.id.cameraButton);
+//        cameraButton = (ImageButton) view.findViewById(R.id.cameraButton);
 
         View.OnClickListener galleryListener = new View.OnClickListener() {
             @Override
