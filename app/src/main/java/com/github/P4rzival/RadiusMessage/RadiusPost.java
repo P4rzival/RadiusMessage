@@ -1,6 +1,8 @@
 package com.github.P4rzival.RadiusMessage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
@@ -10,6 +12,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 import android.location.Location;
 import android.os.Build;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -113,8 +116,7 @@ public class RadiusPost extends Polygon {
         window.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
         window.showAtLocation(popupParentLayout, Gravity.CENTER, 0,0);
 
-
-        //Add text to popup from user input
+        //Populate message content
         TextView currentText = window
                 .getContentView()
                 .findViewById(R.id.messageTextView);
@@ -133,6 +135,17 @@ public class RadiusPost extends Polygon {
         Toast.makeText( RadiusMessage.getAppInstance().getApplicationContext()
                 , "Post Opened."
                 , Toast.LENGTH_SHORT).show();
+    }
+
+    public Bitmap StringToBitMap(String encodedImageString){
+        try{
+            byte [] encodeByte = Base64.decode(encodedImageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0 ,encodeByte.length);
+            return bitmap;
+        } catch(Exception e){
+            e.getMessage();
+            return null;
+        }
     }
 
 }

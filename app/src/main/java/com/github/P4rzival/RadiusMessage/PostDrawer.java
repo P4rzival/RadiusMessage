@@ -16,15 +16,15 @@ import java.util.List;
 // way of doing things!
 public class PostDrawer {
 
-    private drawDataRepository drawRepo;
+    private DrawDataRepository drawRepo;
     private drawData currentDrawData;
 
     public PostDrawer() {
 
-        drawRepo = new drawDataRepository(RadiusMessage.getAppInstance());
+        drawRepo = new DrawDataRepository(RadiusMessage.getAppInstance());
     }
 
-    public drawDataRepository getDrawRepo() {
+    public DrawDataRepository getDrawRepo() {
         return drawRepo;
     }
 
@@ -111,10 +111,10 @@ public class PostDrawer {
         }
     }
 
-    private class clearPostListAsync extends  AsyncTask<drawDataRepository, Void, Void>{
+    private class clearPostListAsync extends  AsyncTask<DrawDataRepository, Void, Void>{
 
         @Override
-        protected Void doInBackground(drawDataRepository... drawDataRepositories){
+        protected Void doInBackground(DrawDataRepository... drawDataRepositories){
             drawDataRepositories[0].deleteAllDrawData();
             return null;
         }

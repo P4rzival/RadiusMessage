@@ -9,12 +9,18 @@ import androidx.lifecycle.ViewModelProvider;
 
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 
 import android.widget.Button;
@@ -26,6 +32,7 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 
@@ -104,6 +111,14 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
+    }
+
+    public String BitmapToString(Bitmap bitmap){
+        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bitStreamOut);
+        byte[] byteImageArray = bitStreamOut.toByteArray();
+        String convertedImage = Base64.encodeToString(byteImageArray, Base64.DEFAULT);
+        return convertedImage;
     }
 
 }
