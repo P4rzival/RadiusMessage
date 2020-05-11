@@ -299,6 +299,9 @@ public class MainActivity extends AppCompatActivity implements TextPostDialog.Te
     //Hold down a tap and make something happen, may be able to use later
     @Override
     public boolean longPressHelper(GeoPoint p) {
+
+        FileUploader.doFileUpload();
+
         return false;
     }
 }
