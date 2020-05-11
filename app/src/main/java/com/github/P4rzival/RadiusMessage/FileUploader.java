@@ -21,7 +21,7 @@ public class FileUploader {
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
         DataInputStream inStream = null;
-        String existingFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mypic.png";
+        String existingFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/mypic.png";
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****";
