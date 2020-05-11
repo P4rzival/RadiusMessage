@@ -128,6 +128,15 @@ public class PostDialog extends AppCompatDialogFragment {
         galleryButton = (ImageButton) view.findViewById(R.id.galleryButton);
 //        cameraButton = (ImageButton) view.findViewById(R.id.cameraButton);
 
+        View.OnClickListener imageToUploadListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
+        imageToUpload.setOnClickListener(imageToUploadListener);
+
+
         View.OnClickListener galleryListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,9 +144,6 @@ public class PostDialog extends AppCompatDialogFragment {
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
             }
         };
-
-
-
         galleryButton.setOnClickListener(galleryListener);
 
 //        View.OnClickListener cameraListener = new View.OnClickListener() {
