@@ -4,12 +4,21 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
+    <ImageView
+        android:id="@+id/messageImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+
     <TextView
         android:id="@+id/messageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textSize="28sp"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/primary_text_light"
         android:text="TextView" />
+
+
 </RelativeLayout>

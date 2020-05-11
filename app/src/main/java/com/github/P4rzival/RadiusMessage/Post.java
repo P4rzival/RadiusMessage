@@ -5,21 +5,20 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.Random;
 
-public class Post extends View implements View.OnClickListener {
+public class Post extends View {
 
     private Paint paint;
     public boolean isPressed = false;
-    private DrawData postData;
-    private OnClickListener listener;
+    private drawData postData;
 
-    public Post(Context context, DrawData newDrawData) {
+    public Post(Context context, drawData newDrawData) {
         super(context);
 
-        setOnClickListener(this);
-        setClickable(true);
+
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         postData = newDrawData;
@@ -48,16 +47,7 @@ public class Post extends View implements View.OnClickListener {
                 paint);
     }
 
-    @Override
-    public void onClick(View v) {
-        //Toast.makeText(getContext(), "On click.", Toast.LENGTH_SHORT).show();
-    }
-
-    public void setListener(OnClickListener listener) {
-        this.listener = listener;
-    }
-
-    public DrawData getPostData() {
+    public drawData getPostData() {
         return postData;
     }
 }

@@ -9,8 +9,9 @@ import java.util.List;
 public class PostRenderer extends ViewModel {
 
     private DrawDataRepository drawRepository;
-    private LiveData<List<DrawData>> allPostDrawData;
+    private LiveData<List<drawData>> allPostDrawData;
     public ArrayList<Post> postList = new ArrayList<Post>();
+    public ArrayList<RadiusPost> radiusPosts = new ArrayList<RadiusPost>();
 
     public PostRenderer(){
         drawRepository = new DrawDataRepository(RadiusMessage.getAppInstance());
@@ -18,11 +19,11 @@ public class PostRenderer extends ViewModel {
     }
 
     //View can use some repo methods when needed
-    public void insert(DrawData currentDrawData) {
+    public void insert(drawData currentDrawData) {
         drawRepository.insert(currentDrawData);
     }
 
-    public void delete(DrawData currentDrawData){
+    public void delete(drawData currentDrawData){
         drawRepository.delete(currentDrawData);
     }
 
@@ -30,7 +31,7 @@ public class PostRenderer extends ViewModel {
         drawRepository.deleteAllDrawData();
     }
 
-    public LiveData<List<DrawData>> getAllPostDrawData(){
+    public LiveData<List<drawData>> getAllPostDrawData(){
         return allPostDrawData;
     }
 

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 public class PostDrawer {
 
     private DrawDataRepository drawRepo;
-    private DrawData currentDrawData;
+    private drawData currentDrawData;
 
     public PostDrawer() {
 
@@ -21,7 +21,7 @@ public class PostDrawer {
         return drawRepo;
     }
 
-    public void setCurrentDrawData(DrawData currentDrawData) {
+    public void setCurrentDrawData(drawData currentDrawData) {
         this.currentDrawData = currentDrawData;
     }
 
@@ -30,9 +30,9 @@ public class PostDrawer {
         new parsePostJSONAsync().execute(newPostJSON);
     }
 
-    public DrawData parsePostJSON(JSONObject newPostJSON) throws JSONException {
+    public drawData parsePostJSON(JSONObject newPostJSON) throws JSONException {
 
-        DrawData newData = new DrawData();
+        drawData newData = new drawData();
 
         String message = newPostJSON.getString("userTextMessage");
         double radius = newPostJSON.getDouble("radius");
@@ -49,11 +49,13 @@ public class PostDrawer {
         return newData;
     }
 
-    private class parsePostJSONAsync extends AsyncTask<JSONObject, Void, DrawData>{
+
+
+    private class parsePostJSONAsync extends AsyncTask<JSONObject, Void, drawData>{
 
         @Override
-        protected DrawData doInBackground(JSONObject... jsonObjects) {
-            DrawData newDrawData;
+        protected drawData doInBackground(JSONObject... jsonObjects) {
+            drawData newDrawData;
             try {
                 newDrawData = parsePostJSON(jsonObjects[0]);
                 //Figure this fix out later

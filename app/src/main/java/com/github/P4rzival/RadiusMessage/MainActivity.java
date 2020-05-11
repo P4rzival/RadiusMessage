@@ -1,65 +1,74 @@
 package com.github.P4rzival.RadiusMessage;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
+import android.preference.PreferenceManager;
+
+import android.util.Base64;
 import android.view.View;
+
 import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.util.GeoPoint;
 
+
+import java.io.ByteArrayOutputStream;
 import java.util.List;
-import java.util.Random;
 
-import java.lang.Math;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PostDialog.TextPostDialogListener {
 
     public ConstraintLayout parentLayout;
+
     public PostRenderer postRenderer;
     private Button testPostButton;
-    private Post currentPost;
+    private RadiusPost currentPost;
 
-    private float lastTouchX;
-    private float lastTouchY;
+    public MapActivity mapActivity;
 
     //May need for later
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Context appContext = getApplicationContext();
+        org.osmdroid.config.Configuration.getInstance().load(appContext, PreferenceManager.getDefaultSharedPreferences(appContext));
         setContentView(R.layout.activity_main);
 
         //Need this in main activity for postRenderer to work.
         parentLayout = findViewById(R.id.parentLayout);
-
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
-        //For the Demo
+
+        mapActivity = new MapActivity(appContext, postRenderer.radiusPosts, parentLayout);
+
         postRenderer.deleteAllData();
-        postRenderer.getAllPostDrawData().observe(this, new Observer<List<DrawData>>() {
+        postRenderer.getAllPostDrawData().observe(this, new Observer<List<drawData>>() {
             @Override
-            public void onChanged(List<DrawData> drawData) {
-                if(drawData != null && drawData.size() > 0)
-                {
-                    addPostToView(drawData.get(drawData.size()-1));
-                    onClickPosts();
-                }
+            public void onChanged(List<drawData> drawData) {
+                updatePostMap(drawData);
                 Toast.makeText(MainActivity.this
                         , "Post Map Updated"
                         , Toast.LENGTH_SHORT).show();
             }
+
         });
         //End of PostRenderer stuff needed in onCreate
 
@@ -67,108 +76,45 @@ public class MainActivity extends AppCompatActivity {
         testPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                JSONObject test = new JSONObject();
-                Random rNum = new Random();
-                try {
-                    //CHNAGE THIS LINE FOR DIFFERENT TEXT!
-                    test.put("userTextMessage", String.valueOf(rNum.nextInt(200)));
-                    test.put("radius", 15 + (200 - 15) * rNum.nextDouble());
-                    test.put("locationX", 1 + (1200 - 1) * rNum.nextDouble());
-                    test.put("locationY", 1 + (1300 - 1) * rNum.nextDouble());
-                    test.put("messageDuration", 1000);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
+                openDialog();
 
-                PostDrawer postDrawer = new PostDrawer();
-                postDrawer.createPost(test);
             }
         });
     }
 
-
-    public void addPostToView(DrawData newPostDrawData){
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Post newPost = new Post(getApplicationContext(), newPostDrawData);
-        parentLayout.addView(newPost);
-        postRenderer.postList.add(newPost);
+    public void openDialog() {
+        PostDialog postDialog = new PostDialog();
+        postDialog.show(getSupportFragmentManager(), "Example TextPost");
     }
 
-    public void onClickPosts(){
-        for (int i = 0; i < postRenderer.postList.size(); i++) {
-            currentPost = postRenderer.postList.get(i);
-            View.OnTouchListener touchListener = new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        lastTouchX = motionEvent.getX();
-                        lastTouchY = motionEvent.getY();
-                        Post postToOpen = isInRadius(lastTouchX, lastTouchY);
-                        if (postToOpen != null) {
-                            openPostMessage(postToOpen);
-                        }
-                    }
-                    return false;
-                }
-            };
-            currentPost.setOnTouchListener(touchListener);
-            currentPost.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+    @Override
+    public void applyTexts(String postText, int postRadius, int postDuration) {
 
-                }
-            });
+        JSONObject post = new JSONObject();
+        GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
+        try {
+            post.put("userTextMessage", postText);
+            post.put("radius", postRadius);
+            post.put("locationX", messageLocation.getLongitude());
+            post.put("locationY", messageLocation.getLatitude());
+            post.put("messageDuration", postDuration);
+        }catch (JSONException e){
+            e.printStackTrace();
         }
+
+        RequestGenerator.generateRequest(post);
     }
 
-    public Post isInRadius(float touchX, float touchY){
-
-        Post postToOpen = null;
-
-        float distance;
-
-        for (int i = 0; i < postRenderer.postList.size(); i++){
-            DrawData postData = postRenderer.postList.get(i).getPostData();
-
-            distance = (float) (Math.pow(touchX - (float) postData.getLocationX(),2) +
-                    Math.pow(touchY - (float) postData.getLocationY(), 2));
-
-            if(Math.sqrt(distance) <= postData.getRadius()){
-                postToOpen = postRenderer.postList.get(i);
-            }
-        }
-        return postToOpen;
+    public void updatePostMap(List<drawData> currentDrawData) {
+        mapActivity.updatePostMapOverlays(currentDrawData);
     }
 
-    public void openPostMessage(Post currentPost){
-
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View newMessagePopup = inflater.inflate(R.layout.post_message, null);
-
-        int width = 920;
-        int height = 1400;
-        boolean focusable = true;
-
-        final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
-        window.showAtLocation(parentLayout, Gravity.CENTER, 0,0);
-
-        TextView currentText = window
-                .getContentView()
-                .findViewById(R.id.messageTextView);
-
-        currentText.setText(currentPost.getPostData().getUserMessageText());
-        newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                window.dismiss();
-                return true;
-            }
-        });
-
-        Toast.makeText(getApplicationContext()
-                , "Post Opened."
-                , Toast.LENGTH_SHORT).show();
-
+    public String BitmapToString(Bitmap bitmap){
+        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bitStreamOut);
+        byte[] byteImageArray = bitStreamOut.toByteArray();
+        String convertedImage = Base64.encodeToString(byteImageArray, Base64.DEFAULT);
+        return convertedImage;
     }
 
 }

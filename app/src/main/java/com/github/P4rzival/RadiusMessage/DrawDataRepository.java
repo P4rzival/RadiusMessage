@@ -10,7 +10,7 @@ import java.util.List;
 public class DrawDataRepository {
 
     private DrawDataDatabaseAccessorObject drawDao;
-    private LiveData<List<DrawData>> allPosts;
+    private LiveData<List<drawData>> allPosts;
 
     public DrawDataRepository(Application application){
         DrawDataLocalDatabase localDatabase = DrawDataLocalDatabase.getInstance(application);
@@ -20,11 +20,11 @@ public class DrawDataRepository {
         }
     }
 
-    public void insert(DrawData currentDrawData){
+    public void insert(drawData currentDrawData){
         new InsertDrawData(drawDao).execute(currentDrawData);
     }
 
-    public void delete(DrawData currentDrawData){
+    public void delete(drawData currentDrawData){
         new DeleteDrawData(drawDao).execute(currentDrawData);
     }
 
@@ -32,11 +32,11 @@ public class DrawDataRepository {
         new DeleteAllDrawData(drawDao).execute();
     }
 
-    public LiveData<List<DrawData>> getAll(){
+    public LiveData<List<drawData>> getAll(){
         return allPosts;
     }
 
-    private static class InsertDrawData extends AsyncTask<DrawData, Void, Void>{
+    private static class InsertDrawData extends AsyncTask<drawData, Void, Void>{
         private DrawDataDatabaseAccessorObject drawDao;
 
         public InsertDrawData(DrawDataDatabaseAccessorObject drawDao) {
@@ -44,13 +44,13 @@ public class DrawDataRepository {
         }
 
         @Override
-        protected Void doInBackground(DrawData... drawData) {
+        protected Void doInBackground(drawData... drawData) {
             drawDao.insert(drawData[0]);
             return null;
         }
     }
 
-    private static class DeleteDrawData extends AsyncTask<DrawData, Void, Void>{
+    private static class DeleteDrawData extends AsyncTask<drawData, Void, Void>{
         private DrawDataDatabaseAccessorObject drawDao;
 
         public DeleteDrawData(DrawDataDatabaseAccessorObject drawDao) {
@@ -58,7 +58,7 @@ public class DrawDataRepository {
         }
 
         @Override
-        protected Void doInBackground(DrawData... drawData) {
+        protected Void doInBackground(drawData... drawData) {
             drawDao.delete(drawData[0]);
             return null;
         }

@@ -12,13 +12,13 @@ import java.util.List;
 public interface DrawDataDatabaseAccessorObject {
 
     @Query("SELECT * FROM postData")
-    LiveData<List<DrawData>> getAll();
+    LiveData<List<drawData>> getAll();
 
     @Insert
-    void insert(DrawData newDrawData);
+    void insert(drawData newDrawData);
 
     @Delete
-    void delete(DrawData oldDrawData);
+    void delete(drawData oldDrawData);
 
     @Query("DELETE FROM postData")
     void deleteAllDrawData();

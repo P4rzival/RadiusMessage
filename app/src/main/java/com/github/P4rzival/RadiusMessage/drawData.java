@@ -6,7 +6,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "postData")
-public class DrawData
+public class drawData
 {
 
     @PrimaryKey(autoGenerate = true)
@@ -16,16 +16,19 @@ public class DrawData
     private double locationX;
     private double locationY;
     private long messageDuration;
+    private String userMessageImage;
 
-    public DrawData(String userMessageText, float radius, float locationX, float locationY, long messageDuration) {
+    //Overloading for options when creating drawData or if we need to update one.
+
+    public drawData(String userMessageText, Double radius, Double locationX, Double locationY, long messageDuration) {
         this.userMessageText = userMessageText;
         this.radius = radius;
         this.locationX = locationX;
         this.locationY = locationY;
         this.messageDuration = messageDuration;
     }
-
-    public DrawData() {
+    @Ignore
+    public drawData() {
     }
 
     public void setId(int id) {
@@ -56,7 +59,9 @@ public class DrawData
         return messageDuration;
     }
 
-    //Used for DrawData creation
+    public String getUserMessageImage() {return userMessageImage;}
+
+    //Used for drawData creation
     public void setUserMessageText(String userMessageText) {
         this.userMessageText = userMessageText;
     }
@@ -76,4 +81,6 @@ public class DrawData
     public void setMessageDuration(long messageDuration) {
         this.messageDuration = messageDuration;
     }
+
+    public void setUserMessageImage(String imageArray){this.userMessageImage = imageArray;}
 }
