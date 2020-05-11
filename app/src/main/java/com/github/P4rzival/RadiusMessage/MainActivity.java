@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     }
 
     @Override
-    public void applyTexts(String postText, int postRadius, int postDuration) {
+    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay) {
 
         JSONObject post = new JSONObject();
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             post.put("locationX", messageLocation.getLongitude());
             post.put("locationY", messageLocation.getLatitude());
             post.put("messageDuration", postDuration);
+            post.put("messageDelay", postDelay);
         }catch (JSONException e){
             e.printStackTrace();
         }
