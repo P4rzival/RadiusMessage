@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
@@ -12,4 +14,24 @@
         android:textSize="28sp"
         android:textColor="@android:color/black"
         android:text="TextView" />
+
+    <ImageButton
+        android:id="@+id/saveButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageDownloaded"
+        android:background="@drawable/ic_save"
+        />
+
+    <ImageView
+        android:id="@+id/imageDownloaded"
+        android:foregroundGravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        app:layout_collapseMode="parallax"
+        app:layout_collapseParallaxMultiplier="0.7"
+        android:layout_below="@+id/messageTextView"
+        />
 </RelativeLayout>

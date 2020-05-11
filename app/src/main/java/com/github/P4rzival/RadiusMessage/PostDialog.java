@@ -41,6 +41,16 @@ public class PostDialog extends AppCompatDialogFragment {
     ImageButton galleryButton;
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null)
+        {
+            Uri selectedImage = data.getData();
+            imageToUpload.setImageURI(selectedImage);
+        }
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
