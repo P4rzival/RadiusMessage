@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     }
 
     @Override
-    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Uri selectedImage) throws IOException {
+    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Bitmap bitmap) throws IOException {
 
         JSONObject post = new JSONObject();
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             post.put("locationY", messageLocation.getLatitude());
             post.put("messageDuration", postDuration);
             post.put("messageDelay", postDelay);
-            post.put("image", MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage));
         }catch (JSONException e){
             e.printStackTrace();
         }

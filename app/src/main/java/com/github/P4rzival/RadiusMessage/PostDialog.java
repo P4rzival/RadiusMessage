@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class PostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
@@ -39,6 +43,7 @@ public class PostDialog extends AppCompatDialogFragment {
     private static SeekBar radiusBar;
     private static TextView radiusView;
 
+    Bitmap bitmapImage;
     Uri selectedImage;
     ImageView imageToUpload;
     ImageButton cameraButton;
@@ -51,6 +56,12 @@ public class PostDialog extends AppCompatDialogFragment {
         {
             selectedImage = data.getData();
             imageToUpload.setImageURI(selectedImage);
+            try {
+                bitmapImage = MediaStore.Images.Media.getBitmap(RadiusMessage.getAppInstance().getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -196,8 +207,12 @@ public class PostDialog extends AppCompatDialogFragment {
                 {
                     postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
                 }
-                
-                listener.applyTexts(postText, postRadius, postDuration, postDelay, selectedImage);
+
+                try {
+                    listener.applyTexts(postText, postRadius, postDuration, postDelay, bitmapImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -217,6 +232,6 @@ public class PostDialog extends AppCompatDialogFragment {
     }
 
     public interface TextPostDialogListener{
-        void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Uri selectedImage) throws IOException;
+        void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Bitmap bitmap) throws IOException;
     }
 }
