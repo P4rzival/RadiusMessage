@@ -11,10 +11,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import android.provider.MediaStore;
 import android.view.View;
 
 import android.widget.Button;
@@ -26,6 +29,7 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -38,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     private RadiusPost currentPost;
 
     public MapActivity mapActivity;
+
+    Bitmap imageToUploadBitmap;
+
 
     //May need for later
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     }
 
     @Override
-    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay) {
+    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Uri selectedImage) throws IOException {
 
         JSONObject post = new JSONObject();
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
@@ -96,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             post.put("locationY", messageLocation.getLatitude());
             post.put("messageDuration", postDuration);
             post.put("messageDelay", postDelay);
+            post.put("image", MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage));
         }catch (JSONException e){
             e.printStackTrace();
         }

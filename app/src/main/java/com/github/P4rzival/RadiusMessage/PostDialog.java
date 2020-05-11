@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import java.io.IOException;
+
 public class PostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
     private TextPostDialogListener listener;
@@ -36,6 +39,7 @@ public class PostDialog extends AppCompatDialogFragment {
     private static SeekBar radiusBar;
     private static TextView radiusView;
 
+    Uri selectedImage;
     ImageView imageToUpload;
     ImageButton cameraButton;
     ImageButton galleryButton;
@@ -45,7 +49,7 @@ public class PostDialog extends AppCompatDialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null)
         {
-            Uri selectedImage = data.getData();
+            selectedImage = data.getData();
             imageToUpload.setImageURI(selectedImage);
         }
     }
@@ -193,7 +197,7 @@ public class PostDialog extends AppCompatDialogFragment {
                     postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
                 }
                 
-                listener.applyTexts(postText, postRadius, postDuration, postDelay);
+                listener.applyTexts(postText, postRadius, postDuration, postDelay, selectedImage);
             }
         });
 
@@ -213,6 +217,6 @@ public class PostDialog extends AppCompatDialogFragment {
     }
 
     public interface TextPostDialogListener{
-        void applyTexts(String postText, int postRadius, int postDuration, int postDelay);
+        void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Uri selectedImage) throws IOException;
     }
 }
