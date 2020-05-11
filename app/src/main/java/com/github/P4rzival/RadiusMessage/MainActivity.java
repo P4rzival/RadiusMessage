@@ -95,10 +95,15 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     }
 
     @Override
-    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Uri selectedImage) throws IOException {
+    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay, String selectedImage) throws IOException {
 
         JSONObject post = new JSONObject();
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
+        String imageString = "";
+        if (selectedImage.compareTo("") != 0)
+        {
+            imageString = getStringFromBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(selectedImage)));
+        }
 
         try {
             post.put("userTextMessage", postText);
@@ -107,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             post.put("locationY", messageLocation.getLatitude());
             post.put("messageDuration", postDuration);
             post.put("messageDelay", postDelay);
-            post.put("image", getStringFromBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage)));
+            post.put("image", imageString);
         }catch (JSONException e){
             e.printStackTrace();
         }

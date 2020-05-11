@@ -113,15 +113,17 @@ public class RadiusPost extends Polygon {
         return false;
     }
 
-    public void openPostPopup(){
+    public void openPostPopup() {
 
         LayoutInflater inflater = (LayoutInflater) RadiusMessage.getAppInstance().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newMessagePopup = inflater.inflate(R.layout.post_message, null);
         imageDownloaded = (ImageView) newMessagePopup.findViewById(R.id.imageDownloaded);
         saveButton = (ImageView) newMessagePopup.findViewById(R.id.saveButton);
+
+        if (postData.getImage().compareTo("") != 0) {
             saveButton.setImageResource(R.drawable.ic_save);
             imageDownloaded.setImageBitmap(getBitmapFromString(postData.getImage()));
-
+        }
 
         int width = 920;
         int height = 1800;

@@ -40,6 +40,7 @@ public class PostDialog extends AppCompatDialogFragment {
     private static TextView radiusView;
 
     Uri selectedImage;
+    String selectedImageString = "";
     ImageView imageToUpload;
     ImageButton cameraButton;
     ImageButton galleryButton;
@@ -50,6 +51,7 @@ public class PostDialog extends AppCompatDialogFragment {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null)
         {
             selectedImage = data.getData();
+            selectedImageString = selectedImage.toString();
             imageToUpload.setImageURI(selectedImage);
         }
     }
@@ -198,7 +200,7 @@ public class PostDialog extends AppCompatDialogFragment {
                 }
 
                 try {
-                    listener.applyTexts(postText, postRadius, postDuration, postDelay, selectedImage);
+                    listener.applyTexts(postText, postRadius, postDuration, postDelay, selectedImageString);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -221,6 +223,6 @@ public class PostDialog extends AppCompatDialogFragment {
     }
 
     public interface TextPostDialogListener{
-        void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Uri selectedImage) throws IOException;
+        void applyTexts(String postText, int postRadius, int postDuration, int postDelay, String selectedImage) throws IOException;
     }
 }
