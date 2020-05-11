@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import java.util.Random;
 
 public class RadiusPost extends Polygon {
 
+    ImageView imageDownloaded;
     public Paint paint;
     public drawData postData;
     public GeoPoint postGeoPoint;
@@ -109,6 +111,7 @@ public class RadiusPost extends Polygon {
 
         LayoutInflater inflater = (LayoutInflater) RadiusMessage.getAppInstance().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newMessagePopup = inflater.inflate(R.layout.post_message, null);
+        imageDownloaded = (ImageView) newMessagePopup.findViewById(R.id.imageDownloaded);
 
         int width = 920;
         int height = 1800;

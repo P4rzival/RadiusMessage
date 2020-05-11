@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,12 +21,18 @@ public class PostDialog extends AppCompatDialogFragment {
     private EditText editPostText;
     private TextPostDialogListener listener;
 
+
     private static SeekBar delayBar;
     private static TextView delayView;
+
     private static SeekBar timeBar;
     private static TextView timeView;
     private static SeekBar radiusBar;
     private static TextView radiusView;
+
+    ImageView imageToUpload;
+    ImageButton cameraButton;
+    ImageButton galleryButton;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -99,7 +108,27 @@ public class PostDialog extends AppCompatDialogFragment {
             }
         });
 
-        builder.setView(view).setTitle("TextPost").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        imageToUpload = (ImageView) view.findViewById(R.id.imageToUpload);
+        galleryButton = (ImageButton) view.findViewById(R.id.galleryButton);
+        cameraButton = (ImageButton) view.findViewById(R.id.cameraButton);
+
+        View.OnClickListener galleryListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
+        galleryButton.setOnClickListener(galleryListener);
+
+        View.OnClickListener cameraListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
+        cameraButton.setOnClickListener(cameraListener);
+
+        builder.setView(view).setTitle("Make a Post!").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
