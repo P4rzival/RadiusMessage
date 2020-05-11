@@ -82,9 +82,9 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         map.getOverlays().add(locationNewOverlay);
         map.invalidate();
 
-        userCollectionManager = UserCollectionManager.getInstance();
+        /*userCollectionManager = UserCollectionManager.getInstance();
         userCollectionManager.togglePostCollection();
-        userCollectionManager.collectPosts();
+        userCollectionManager.collectPosts();*/
 
     }
 
@@ -119,7 +119,7 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         }
         map.getOverlays().add(locationNewOverlay);
         map.getOverlays().add(mapEventsOverlay);
-        userCollectionManager.radiusPosts = listOfPosts;
+        //userCollectionManager.radiusPosts = listOfPosts;
     }
 
     @Override

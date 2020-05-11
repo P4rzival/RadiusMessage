@@ -20,6 +20,7 @@ import android.preference.PreferenceManager;
 
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Base64InputStream;
 import android.view.View;
 
 import android.widget.Button;
@@ -31,8 +32,11 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -63,10 +67,10 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         //Need this in main activity for postRenderer to work.
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
-        postRenderer.deleteAllData();
+        //postRenderer.deleteAllData();
         mapActivity = new MapActivity(appContext, postRenderer.radiusPosts, parentLayout);
 
-        postRenderer.deleteAllData();
+
         postRenderer.getAllPostDrawData().observe(this, new Observer<List<drawData>>() {
             @Override
             public void onChanged(List<drawData> drawData) {
@@ -124,10 +128,11 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
     public String BitmapToString(Bitmap bitmap){
         ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, bitStreamOut);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 24, bitStreamOut);
         byte[] byteImageArray = bitStreamOut.toByteArray();
         String convertedImage = Base64.encodeToString(byteImageArray, Base64.URL_SAFE);
         return convertedImage;
     }
+
 
 }
