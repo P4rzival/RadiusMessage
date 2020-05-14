@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 //Database implemented as Singleton, only can access through the DrawDataRepository
-@Database(entities = drawData.class, version = 5, exportSchema = false)
+@Database(entities = drawData.class, version = 6, exportSchema = false)
 public abstract class DrawDataLocalDatabase extends RoomDatabase {
 
     private static DrawDataLocalDatabase instance;
