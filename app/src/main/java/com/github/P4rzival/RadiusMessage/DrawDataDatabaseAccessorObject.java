@@ -9,7 +9,7 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface drawDataDao {
+public interface DrawDataDatabaseAccessorObject {
 
     @Query("SELECT * FROM postData")
     LiveData<List<drawData>> getAll();

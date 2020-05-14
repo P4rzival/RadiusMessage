@@ -3,12 +3,24 @@ package com.github.P4rzival.RadiusMessage;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.github.P4rzival.RadiusMessage.User.UserCollectionManager;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapEventsReceiver;
@@ -36,6 +48,7 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
     private Location userLocation;
 
     private UserLocationManager userLocationManager;
+    private UserCollectionManager userCollectionManager;
 
     public ArrayList<RadiusPost> listOfPosts;
     private RadiusPost currentPost;
@@ -68,6 +81,10 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         locationNewOverlay.enableFollowLocation();
         map.getOverlays().add(locationNewOverlay);
         map.invalidate();
+
+        /*userCollectionManager = UserCollectionManager.getInstance();
+        userCollectionManager.togglePostCollection();
+        userCollectionManager.collectPosts();*/
 
     }
 
@@ -102,14 +119,18 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
         }
         map.getOverlays().add(locationNewOverlay);
         map.getOverlays().add(mapEventsOverlay);
-
+        //userCollectionManager.radiusPosts = listOfPosts;
     }
 
     @Override
     public boolean singleTapConfirmedHelper(GeoPoint p) {
         currentPost = getPostToOpen(p);
-        if(currentPost != null && UserLocationManager.getInstance().isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius())){
+        if(currentPost != null && userLocationManager.isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius())){
             currentPost.openPostPopup();
+        }
+        else if(currentPost != null && userLocationManager.isInGeoRadius(getMyLocationOnMap(), currentPost.postGeoPoint, currentPost.postData.getRadius() ) == false){
+            //Open a popup that shows the distance to the selected post
+            openPostInfoPopup(currentPost);
         }
         return true;
     }
@@ -181,5 +202,40 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
             }
         }
         return smallestPost;
+    }
+
+    public void openPostInfoPopup(final RadiusPost currentPostRadius){
+        LayoutInflater inflater = (LayoutInflater) RadiusMessage.getAppInstance().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View newMessagePopup = inflater.inflate(R.layout.post_info_popup, null);
+
+        int width = 920;
+        int height =920;
+        boolean focusable = true;
+
+        final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
+
+        window.showAtLocation( parentLayout, Gravity.CENTER, 0,0);
+
+        //Populate message content
+        TextView currentText = window
+                .getContentView()
+                .findViewById(R.id.distanceText);
+
+        currentText.setText("Distance: " + Math.ceil(userLocationManager.getDistanceToPost(currentPostRadius.postGeoPoint)) +"m");
+        currentPostRadius.setFillColor(Color.WHITE);
+
+        newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                currentPostRadius.setFillColor(currentPostRadius.paint.getColor());
+                window.dismiss();
+
+                return true;
+            }
+        });
+
+        Toast.makeText( RadiusMessage.getAppInstance().getApplicationContext()
+                , "Checking distance from post."
+                , Toast.LENGTH_SHORT).show();
     }
 }

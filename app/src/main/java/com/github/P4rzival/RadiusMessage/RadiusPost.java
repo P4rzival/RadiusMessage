@@ -1,20 +1,32 @@
 package com.github.P4rzival.RadiusMessage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.PorterDuffXfermode;
 import android.location.Location;
 import android.os.Build;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.github.P4rzival.RadiusMessage.PostDesign.ThemePicker;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -34,6 +46,7 @@ public class RadiusPost extends Polygon {
     public GeoPoint postGeoPoint;
     public boolean isPressed = false;
     private ConstraintLayout popupParentLayout;
+    private static final float MIN_BRIGHTNESS = 0.8f;
 
 
     public RadiusPost(MapView mapView, drawData newDrawData, ConstraintLayout parentLayout) {
@@ -45,28 +58,26 @@ public class RadiusPost extends Polygon {
         GeoPoint messageLocation = new GeoPoint( postData.getLocationY(), postData.getLocationX());
         postGeoPoint = messageLocation;
 
-        Random rNumber = new Random();
-        int a = 1;
-        int r = 1 + (255- 1) * rNumber.nextInt();
-        int g = 1 + (255- 1) * rNumber.nextInt();
-        int b = 1 + (255- 1) * rNumber.nextInt();
-
-
-        //Check version to see if we need to use an old way of getting the custom color
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            paint.setARGB(a,r,g,b);
-        }
-        else {
-            paint.setARGB(a,r,g,b);
-        }
     }
+
 
     public void drawMapPost(MapView mapView){
 
-        paint.setAlpha(130);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            paint.setColor(new ThemePicker().getRandomColorFromPalatte());
+        }else {
+            generateRandomBrightColor();
+        }
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             paint.setBlendMode(BlendMode.PLUS);
+        }else {
+            paint.setColorFilter(new PorterDuffColorFilter(paint.getColor(), PorterDuff.Mode.SRC_ATOP));
+            //paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.ADD));
+
         }
+
         this.setPoints(Polygon.pointsAsCircle(postGeoPoint, postData.getRadius()));
 
         this.setFillColor(paint.getColor());
@@ -76,33 +87,20 @@ public class RadiusPost extends Polygon {
         mapView.getOverlays().add(this);
     }
 
+    private void generateRandomBrightColor(){
+        Random rNumber = new Random();
+        int r = 1 + (255- 200) * rNumber.nextInt();
+        int g = 1 + (255- 200) * rNumber.nextInt();
+        int b = 1 + (255- 50) * rNumber.nextInt();
+        paint.setARGB(1,r,g,b);
+        paint.setAlpha(130);
+    }
+
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event, MapView mapView){
         //Return true so the little window does not pop up, may be able to use little window in future
         return true;
         //return super.onSingleTapConfirmed(event, mapView);
-    }
-    //TODO use map event on main activity and cycle through each open first popup
-    public boolean isInRadius(MotionEvent event, MapView mapView)
-    {
-        Projection projection = mapView.getProjection();
-        GeoPoint eventPoint = (GeoPoint) projection.fromPixels((int) event.getX(), (int) event.getY());
-
-        Location eventLocation = new Location("");
-        eventLocation.setLongitude(eventPoint.getLongitude());
-        eventLocation.setLatitude(eventPoint.getLatitude());
-
-        Location postLocation = new Location("");
-        postLocation.setLongitude(postGeoPoint.getLongitude());
-        postLocation.setLatitude(postGeoPoint.getLatitude());
-
-        double distanceInMeters = eventLocation.distanceTo(postLocation);
-
-        if(distanceInMeters <= postData.getRadius()){
-            return true;
-        }
-
-        return false;
     }
 
     public void openPostPopup(){
@@ -115,9 +113,16 @@ public class RadiusPost extends Polygon {
         boolean focusable = true;
 
         final PopupWindow window = new PopupWindow(newMessagePopup, width, height, focusable);
+        window.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        window.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
         window.showAtLocation(popupParentLayout, Gravity.CENTER, 0,0);
 
-        //Add text to popup from user input
+        //Populate message content
+        if(postData.getUserMessageImage() != ""){
+            ImageView imageView = window.getContentView().findViewById(R.id.messageImageView);
+            imageView.setImageBitmap(StringToBitMap(postData.getUserMessageImage()));
+        }
+
         TextView currentText = window
                 .getContentView()
                 .findViewById(R.id.messageTextView);
@@ -136,6 +141,17 @@ public class RadiusPost extends Polygon {
         Toast.makeText( RadiusMessage.getAppInstance().getApplicationContext()
                 , "Post Opened."
                 , Toast.LENGTH_SHORT).show();
+    }
+
+    public Bitmap StringToBitMap(String encodedImageString){
+        try{
+            byte [] encodeByte = Base64.decode(encodedImageString, Base64.URL_SAFE);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0 ,encodeByte.length);
+            return bitmap;
+        } catch(Exception e){
+            e.getMessage();
+            return null;
+        }
     }
 
 }

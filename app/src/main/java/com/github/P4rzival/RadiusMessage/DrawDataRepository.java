@@ -7,22 +7,19 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-public class drawDataRepository {
+public class DrawDataRepository {
 
-    private drawDataDao drawDao;
+    private DrawDataDatabaseAccessorObject drawDao;
     private LiveData<List<drawData>> allPosts;
 
-    public drawDataRepository(Application application){
-        drawDataLocalDatabase localDatabase = drawDataLocalDatabase.getInstance(application);
+    public DrawDataRepository(Application application){
+        DrawDataLocalDatabase localDatabase = DrawDataLocalDatabase.getInstance(application);
         drawDao = localDatabase.drawDao();
         if(localDatabase != null && drawDao != null){
             allPosts = drawDao.getAll();
         }
     }
 
-    //These are local database operations for the posts
-    //have to run these in a background thread(Async) or else
-    //it has the potential to freeze up the application
     public void insert(drawData currentDrawData){
         new InsertDrawData(drawDao).execute(currentDrawData);
     }
@@ -39,12 +36,10 @@ public class drawDataRepository {
         return allPosts;
     }
 
-    //AysncTasks for Repo, Room will autogenerate actual command code that goes in them
-    //PostDrawer will have a more fleshed out AsyncTask usage
     private static class InsertDrawData extends AsyncTask<drawData, Void, Void>{
-        private drawDataDao drawDao;
+        private DrawDataDatabaseAccessorObject drawDao;
 
-        public InsertDrawData(drawDataDao drawDao) {
+        public InsertDrawData(DrawDataDatabaseAccessorObject drawDao) {
             this.drawDao = drawDao;
         }
 
@@ -56,9 +51,9 @@ public class drawDataRepository {
     }
 
     private static class DeleteDrawData extends AsyncTask<drawData, Void, Void>{
-        private drawDataDao drawDao;
+        private DrawDataDatabaseAccessorObject drawDao;
 
-        public DeleteDrawData(drawDataDao drawDao) {
+        public DeleteDrawData(DrawDataDatabaseAccessorObject drawDao) {
             this.drawDao = drawDao;
         }
 
@@ -70,9 +65,9 @@ public class drawDataRepository {
     }
 
     private static class DeleteAllDrawData extends AsyncTask<Void, Void, Void>{
-        private drawDataDao drawDao;
+        private DrawDataDatabaseAccessorObject drawDao;
 
-        public DeleteAllDrawData(drawDataDao drawDao) {
+        public DeleteAllDrawData(DrawDataDatabaseAccessorObject drawDao) {
             this.drawDao = drawDao;
         }
 

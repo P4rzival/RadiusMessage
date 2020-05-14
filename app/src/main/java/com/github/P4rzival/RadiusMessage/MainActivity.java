@@ -11,10 +11,16 @@ import androidx.lifecycle.ViewModelProvider;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Base64InputStream;
 import android.view.View;
 
 import android.widget.Button;
@@ -26,6 +32,11 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -38,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     private RadiusPost currentPost;
 
     public MapActivity mapActivity;
+
+    Bitmap imageToUploadBitmap;
+
 
     //May need for later
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -53,10 +67,10 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         //Need this in main activity for postRenderer to work.
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
-
+        //postRenderer.deleteAllData();
         mapActivity = new MapActivity(appContext, postRenderer.radiusPosts, parentLayout);
 
-        postRenderer.deleteAllData();
+
         postRenderer.getAllPostDrawData().observe(this, new Observer<List<drawData>>() {
             @Override
             public void onChanged(List<drawData> drawData) {
@@ -85,16 +99,22 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     }
 
     @Override
-    public void applyTexts(String postText, int postRadius, int postDuration) {
+    public void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Bitmap bitmap) throws IOException {
 
         JSONObject post = new JSONObject();
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
+        String decodedImage = "";
+        if(bitmap != null){
+            decodedImage = BitmapToString(bitmap);
+        }
         try {
             post.put("userTextMessage", postText);
             post.put("radius", postRadius);
             post.put("locationX", messageLocation.getLongitude());
             post.put("locationY", messageLocation.getLatitude());
             post.put("messageDuration", postDuration);
+            post.put("messageDelay", postDelay);
+            post.put("userMessageImage", decodedImage);
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -105,5 +125,14 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
     }
+
+    public String BitmapToString(Bitmap bitmap){
+        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 24, bitStreamOut);
+        byte[] byteImageArray = bitStreamOut.toByteArray();
+        String convertedImage = Base64.encodeToString(byteImageArray, Base64.URL_SAFE);
+        return convertedImage;
+    }
+
 
 }

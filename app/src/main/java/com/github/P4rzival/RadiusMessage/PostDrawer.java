@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 
 //simple class to run a task in background in order to
 //parse a JSON object, sends new drawData to the drawRepo
@@ -14,20 +16,24 @@ import org.json.JSONObject;
 // way of doing things!
 public class PostDrawer {
 
-    private drawDataRepository drawRepo;
+    private DrawDataRepository drawRepo;
     private drawData currentDrawData;
 
     public PostDrawer() {
 
-        drawRepo = new drawDataRepository(RadiusMessage.getAppInstance());
+        drawRepo = new DrawDataRepository(RadiusMessage.getAppInstance());
     }
 
-    public drawDataRepository getDrawRepo() {
+    public DrawDataRepository getDrawRepo() {
         return drawRepo;
     }
 
     public void setCurrentDrawData(drawData currentDrawData) {
         this.currentDrawData = currentDrawData;
+    }
+
+    public void clearPostList(){
+        new clearPostListAsync().execute(drawRepo);
     }
 
     //Async Task Call in createPost
@@ -46,14 +52,29 @@ public class PostDrawer {
         double locX = newPostJSON.getDouble("locationX");
         double locY = newPostJSON.getDouble("locationY");
         long messageDur = newPostJSON.getLong("messageDuration");
+        long messageDelay = newPostJSON.getLong("messageDelay");
+        String userMessageImage = newPostJSON.getString("userMessageImage");
 
         newData.setUserMessageText(message);
         newData.setRadius(radius);
         newData.setLocationX(locX);
         newData.setLocationY(locY);
         newData.setMessageDuration(messageDur);
+        newData.setMessageDelay(messageDelay);
+        newData.setUserMessageImage(userMessageImage);
 
         return newData;
+    }
+
+    //Use when refreshing server
+    public void parsePostJSONList(List<JSONObject> serverPostList) throws JSONException{
+
+        clearPostList();
+
+        for (int i = 0; i <= serverPostList.size(); i++){
+
+            parsePostJSON(serverPostList.get(i));
+        }
     }
 
     //The AsynTask class acts as sort of a function object
@@ -90,7 +111,16 @@ public class PostDrawer {
 
         @Override
         protected void onPostExecute(drawData drawData) {
-            setCurrentDrawData(drawData);
+            //setCurrentDrawData(drawData);
+        }
+    }
+
+    private class clearPostListAsync extends  AsyncTask<DrawDataRepository, Void, Void>{
+
+        @Override
+        protected Void doInBackground(DrawDataRepository... drawDataRepositories){
+            drawDataRepositories[0].deleteAllDrawData();
+            return null;
         }
     }
 }

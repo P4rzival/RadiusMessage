@@ -74,4 +74,16 @@ public class UserLocationManager {
         return false;
     }
 
+    public double getDistanceToPost(GeoPoint postPoint){
+
+        userLocation = userGPSLocationProvider.getLastKnownLocation();
+
+        Location postLocation = new Location("post");
+        postLocation.setLatitude(postPoint.getLatitude());
+        postLocation.setLongitude(postPoint.getLongitude());
+
+        double distanceInMeters = userLocation.distanceTo(postLocation);
+        return  distanceInMeters;
+    }
+
 }
