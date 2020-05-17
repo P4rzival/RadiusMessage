@@ -1,6 +1,7 @@
 package com.github.P4rzival.RadiusMessage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
@@ -11,7 +12,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,7 +38,14 @@ import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -48,6 +58,8 @@ public class RadiusPost extends Polygon {
     private ConstraintLayout popupParentLayout;
     private static final float MIN_BRIGHTNESS = 0.8f;
 
+    ImageView imageView;
+    ImageView saveButton;
 
     public RadiusPost(MapView mapView, drawData newDrawData, ConstraintLayout parentLayout) {
         super(mapView);
@@ -107,6 +119,7 @@ public class RadiusPost extends Polygon {
 
         LayoutInflater inflater = (LayoutInflater) RadiusMessage.getAppInstance().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newMessagePopup = inflater.inflate(R.layout.post_message, null);
+        saveButton = (ImageView) newMessagePopup.findViewById(R.id.saveButton);
 
         int width = 920;
         int height = 1800;
@@ -119,7 +132,7 @@ public class RadiusPost extends Polygon {
 
         //Populate message content
         if(postData.getUserMessageImage() != ""){
-            ImageView imageView = window.getContentView().findViewById(R.id.messageImageView);
+            imageView = window.getContentView().findViewById(R.id.messageImageView);
             imageView.setImageBitmap(StringToBitMap(postData.getUserMessageImage()));
         }
 
@@ -128,6 +141,55 @@ public class RadiusPost extends Polygon {
                 .findViewById(R.id.messageTextView);
 
         currentText.setText(postData.getUserMessageText());
+
+
+        View.OnClickListener saveButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File path = Environment.getExternalStorageDirectory();
+                File dir = new File(path.getAbsolutePath()+"/RadiusMessage");
+                dir.mkdirs();
+
+                File file = new File(dir, "new.png");
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                OutputStream out = null;
+                try {
+                    out = new FileOutputStream(file);
+                    StringToBitMap(postData.getUserMessageImage()).compress(Bitmap.CompressFormat.PNG, 100, out);
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//                String imageFileName = "JPEG_" + timeStamp + "_";
+//                File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//                File image = null;
+//                try {
+//                    image = File.createTempFile(
+//                            imageFileName,  /* prefix */
+//                            ".jpg",         /* suffix */
+//                            storageDir      /* directory */
+//                    );
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                Intent saveImageIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                saveImageIntent.setData(Uri.fromFile(image));
+
+                Toast.makeText( RadiusMessage.getAppInstance().getApplicationContext()
+                        , "Image saved to " + dir.toString()
+                        , Toast.LENGTH_SHORT).show();
+            }
+        };
+        saveButton.setOnClickListener(saveButtonListener);
 
         newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
             @Override
