@@ -1,7 +1,10 @@
 package com.github.P4rzival.RadiusMessage;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
@@ -28,6 +31,8 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.github.P4rzival.RadiusMessage.PostDesign.ThemePicker;
 
@@ -148,24 +153,33 @@ public class RadiusPost extends Polygon {
             public void onClick(View v) {
                 File path = Environment.getExternalStorageDirectory();
                 File dir = new File(path.getAbsolutePath()+"/RadiusMessage");
-                dir.mkdirs();
+                
+                if (ContextCompat.checkSelfPermission(RadiusMessage.getAppInstance().getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    // Do the file write
+                    dir.mkdirs();
 
-                File file = new File(dir, "new.png");
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    File file = new File(dir, "new.png");
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    OutputStream out = null;
+                    try {
+                        out = new FileOutputStream(file);
+                        StringToBitMap(postData.getUserMessageImage()).compress(Bitmap.CompressFormat.PNG, 100, out);
+                        out.flush();
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Request permission from the user
+                    ActivityCompat.requestPermissions((Activity) RadiusMessage.getAppInstance().getApplicationContext(),
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 }
 
-                OutputStream out = null;
-                try {
-                    out = new FileOutputStream(file);
-                    StringToBitMap(postData.getUserMessageImage()).compress(Bitmap.CompressFormat.PNG, 100, out);
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
 //                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 //                String imageFileName = "JPEG_" + timeStamp + "_";
