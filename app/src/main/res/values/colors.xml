@@ -3,4 +3,5 @@
     <color name="colorPrimary">#17B978</color>
     <color name="colorPrimaryDark">#086972</color>
     <color name="colorAccent">#071A52</color>
+    <color name="legacy_icon_background">#FFFFFF</color>
 </resources>

@@ -4,17 +4,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -41,15 +37,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements PostDialog.TextPostDialogListener {
 
-    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-
     public ConstraintLayout parentLayout;
+    PostImage postImage;
 
     public PostRenderer postRenderer;
     private Button testPostButton;
@@ -71,14 +65,8 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         org.osmdroid.config.Configuration.getInstance().load(appContext, PreferenceManager.getDefaultSharedPreferences(appContext));
         setContentView(R.layout.activity_main);
 
-        requestPermissionsIfNecessary(new String[]{
-                // if you need to show the current location, uncomment the line below
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                // WRITE_EXTERNAL_STORAGE is required in order to show the map
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        });
-
         //Need this in main activity for postRenderer to work.
+        postImage = new PostImage();
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
         //postRenderer.deleteAllData();
@@ -119,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
         String decodedImage = "";
         if(bitmap != null){
-            decodedImage = BitmapToString(bitmap);
+            decodedImage = postImage.BitmapToString(bitmap);
         }
         try {
             post.put("userTextMessage", postText);
@@ -139,50 +127,4 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
     }
-
-    public String BitmapToString(Bitmap bitmap){
-        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 24, bitStreamOut);
-        byte[] byteImageArray = bitStreamOut.toByteArray();
-        String convertedImage = Base64.encodeToString(byteImageArray, Base64.URL_SAFE);
-        return convertedImage;
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (int i = 0; i < grantResults.length; i++) {
-            permissionsToRequest.add(permissions[i]);
-        }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
-
-    private void requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                // Permission is not granted
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-
-
-            //ActivityCompat.requestPermissions((Activity) RadiusMessage.getAppInstance().getApplicationContext(),
-            //        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-        }
-    }
-
 }
-
