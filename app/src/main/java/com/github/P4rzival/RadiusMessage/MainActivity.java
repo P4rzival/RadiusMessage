@@ -43,6 +43,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements PostDialog.TextPostDialogListener {
 
     public ConstraintLayout parentLayout;
+    PostImage postImage;
 
     public PostRenderer postRenderer;
     private Button testPostButton;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         setContentView(R.layout.activity_main);
 
         //Need this in main activity for postRenderer to work.
+        postImage = new PostImage();
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
         //postRenderer.deleteAllData();
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
         String decodedImage = "";
         if(bitmap != null){
-            decodedImage = BitmapToString(bitmap);
+            decodedImage = postImage.BitmapToString(bitmap);
         }
         try {
             post.put("userTextMessage", postText);
@@ -125,14 +127,4 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
     }
-
-    public String BitmapToString(Bitmap bitmap){
-        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 24, bitStreamOut);
-        byte[] byteImageArray = bitStreamOut.toByteArray();
-        String convertedImage = Base64.encodeToString(byteImageArray, Base64.URL_SAFE);
-        return convertedImage;
-    }
-
-
 }

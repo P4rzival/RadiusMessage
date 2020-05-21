@@ -57,6 +57,7 @@ import java.util.UUID;
 
 public class RadiusPost extends Polygon {
 
+    PostImage postImage;
     public Paint paint;
     public drawData postData;
     public GeoPoint postGeoPoint;
@@ -70,6 +71,7 @@ public class RadiusPost extends Polygon {
     public RadiusPost(MapView mapView, drawData newDrawData, ConstraintLayout parentLayout) {
         super(mapView);
 
+        postImage = new PostImage();
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         postData = newDrawData;
         popupParentLayout = parentLayout;
@@ -139,7 +141,7 @@ public class RadiusPost extends Polygon {
         //Populate message content
         if(postData.getUserMessageImage() != ""){
             imageView = window.getContentView().findViewById(R.id.messageImageView);
-            imageView.setImageBitmap(StringToBitMap(postData.getUserMessageImage()));
+            imageView.setImageBitmap(postImage.StringToBitMap(postData.getUserMessageImage()));
         }
 
         TextView currentText = window
@@ -152,56 +154,7 @@ public class RadiusPost extends Polygon {
         View.OnClickListener saveButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File path = Environment.getExternalStorageDirectory();
-                File dir = new File(path.getAbsolutePath()+"/RadiusMessage");
-                
-                if (ContextCompat.checkSelfPermission(RadiusMessage.getAppInstance().getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    // Do the file write
-                    dir.mkdirs();
-
-                    File file = new File(dir, UUID.randomUUID().toString() + ".png");
-                    try {
-                        file.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    OutputStream out = null;
-                    try {
-                        out = new FileOutputStream(file);
-                        StringToBitMap(postData.getUserMessageImage()).compress(Bitmap.CompressFormat.PNG, 100, out);
-                        out.flush();
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // Request permission from the user
-                    ActivityCompat.requestPermissions((Activity) RadiusMessage.getAppInstance().getApplicationContext(),
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-                }
-
-
-//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//                String imageFileName = "JPEG_" + timeStamp + "_";
-//                File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-//                File image = null;
-//                try {
-//                    image = File.createTempFile(
-//                            imageFileName,  /* prefix */
-//                            ".jpg",         /* suffix */
-//                            storageDir      /* directory */
-//                    );
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                Intent saveImageIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                saveImageIntent.setData(Uri.fromFile(image));
-
-                Toast.makeText( RadiusMessage.getAppInstance().getApplicationContext()
-                        , "Image saved to " + dir.toString()
-                        , Toast.LENGTH_SHORT).show();
+                postImage.savePostImage(postImage.StringToBitMap(postData.getUserMessageImage()));
             }
         };
         saveButton.setOnClickListener(saveButtonListener);
@@ -219,16 +172,4 @@ public class RadiusPost extends Polygon {
                 , "Post Opened."
                 , Toast.LENGTH_SHORT).show();
     }
-
-    public Bitmap StringToBitMap(String encodedImageString){
-        try{
-            byte [] encodeByte = Base64.decode(encodedImageString, Base64.URL_SAFE);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0 ,encodeByte.length);
-            return bitmap;
-        } catch(Exception e){
-            e.getMessage();
-            return null;
-        }
-    }
-
 }
