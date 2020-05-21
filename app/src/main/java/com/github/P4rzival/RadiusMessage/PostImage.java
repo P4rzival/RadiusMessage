@@ -52,7 +52,7 @@ public class PostImage {
             dir.mkdirs();
 
 
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date());
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS").format(new Date());
             fileName = timeStamp + ".png";
 
             File file = new File(dir, fileName);
