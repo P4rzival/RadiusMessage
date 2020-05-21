@@ -13,11 +13,11 @@ public class DatabaseAccessor {
     }
 
     public static void databaseRequestApproval(PostRequestSupervisor postRequestSupervisor) {
-        databaseFakeRequestApproval(postRequestSupervisor);
+        new DatabaseRequestTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, postRequestSupervisor);
     }
 
 
-    private class databaseRequestTask extends AsyncTask<PostRequestSupervisor, Long, Integer> {
+    private static class DatabaseRequestTask extends AsyncTask<PostRequestSupervisor, Long, Integer> {
 
         long timeoutCounter = 0l;
         long previousTime = System.currentTimeMillis();
