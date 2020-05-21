@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class RadiusPost extends Polygon {
 
@@ -158,7 +159,7 @@ public class RadiusPost extends Polygon {
                     // Do the file write
                     dir.mkdirs();
 
-                    File file = new File(dir, "new.png");
+                    File file = new File(dir, UUID.randomUUID().toString() + ".png");
                     try {
                         file.createNewFile();
                     } catch (IOException e) {
