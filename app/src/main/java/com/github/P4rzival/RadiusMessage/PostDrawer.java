@@ -49,8 +49,8 @@ public class PostDrawer {
 
         String message = newPostJSON.getString("user_message_text");
         double radius = newPostJSON.getDouble("radius");
-        double locX = newPostJSON.getDouble("latitude");
-        double locY = newPostJSON.getDouble("longitude");
+        double locX = newPostJSON.getDouble("longitude");
+        double locY = newPostJSON.getDouble("latitude");
         long messageDur = newPostJSON.getLong("message_duration");
         long messageDelay = newPostJSON.getLong("message_delay");
         String userMessageImage = newPostJSON.getString("user_message_image");
