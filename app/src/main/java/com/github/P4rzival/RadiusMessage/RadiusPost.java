@@ -139,9 +139,10 @@ public class RadiusPost extends Polygon {
         window.showAtLocation(popupParentLayout, Gravity.CENTER, 0,0);
 
         //Populate message content
-        if(postData.getUserMessageImage() != ""){
+        if(postImage.StringToBitMap(postData.getUserMessageImage()) != null){
             imageView = window.getContentView().findViewById(R.id.messageImageView);
             imageView.setImageBitmap(postImage.StringToBitMap(postData.getUserMessageImage()));
+            saveButton.setImageResource(R.drawable.ic_save);
         }
 
         TextView currentText = window
