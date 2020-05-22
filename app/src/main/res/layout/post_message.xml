@@ -16,13 +16,12 @@
         android:textColor="@android:color/black"
         android:text="TextView" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/saveButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/messageImageView"
-        android:background="@drawable/ic_save"
         />
 
     <ImageView

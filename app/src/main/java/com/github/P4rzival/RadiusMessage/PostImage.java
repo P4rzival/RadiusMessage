@@ -43,7 +43,7 @@ public class PostImage {
     }
 
     public String savePostImage(Bitmap imageToSave){
-        File path = Environment.getExternalStorageDirectory();
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File dir = new File(path.getAbsolutePath()+"/RadiusMessage");
         String fileName = "";
 

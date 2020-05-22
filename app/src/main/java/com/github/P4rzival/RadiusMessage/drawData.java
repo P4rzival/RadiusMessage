@@ -10,6 +10,7 @@ public class drawData
 {
 
     @PrimaryKey(autoGenerate = true)
+    boolean imageCheck;
     private int id;
     private String userMessageText;
     private double radius;
@@ -21,18 +22,22 @@ public class drawData
     private boolean isCollectedByUser;
     //Overloading for options when creating drawData or if we need to update one.
 
-    public drawData(String userMessageText, Double radius, Double locationX, Double locationY, long messageDuration) {
+    public drawData(String userMessageText, Double radius, Double locationX, Double locationY, long messageDuration, boolean imageCheck) {
         this.userMessageText = userMessageText;
         this.radius = radius;
         this.locationX = locationX;
         this.locationY = locationY;
         this.messageDuration = messageDuration;
         this.isCollectedByUser = false;
+        this.imageCheck = imageCheck;
     }
     @Ignore
     public drawData() {
     }
 
+    public boolean getImageCheck(){
+        return this.imageCheck;
+    }
     public void setId(int id) {
         this.id = id;
     }

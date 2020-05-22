@@ -43,6 +43,7 @@ public class PostDialog extends AppCompatDialogFragment {
     private static SeekBar radiusBar;
     private static TextView radiusView;
 
+    boolean imageCheck = false;
     Bitmap bitmapImage;
     Uri selectedImage;
     ImageView imageToUpload;
@@ -208,8 +209,14 @@ public class PostDialog extends AppCompatDialogFragment {
                     postRadius = Integer.parseInt(radiusView.getText().toString().replaceAll("\\D+",""));
                 }
 
+
+                if (bitmapImage != null)
+                {
+                    imageCheck = true;
+                }
+
                 try {
-                    listener.applyTexts(postText, postRadius, postDuration, postDelay, bitmapImage);
+                    listener.applyTexts(postText, postRadius, postDuration, postDelay, bitmapImage, imageCheck);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -232,6 +239,6 @@ public class PostDialog extends AppCompatDialogFragment {
     }
 
     public interface TextPostDialogListener{
-        void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Bitmap bitmap) throws IOException;
+        void applyTexts(String postText, int postRadius, int postDuration, int postDelay, Bitmap bitmap, boolean imageCheck) throws IOException;
     }
 }
