@@ -13,6 +13,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.util.GeoPoint;
 
 public class DatabaseAccessor {
 
@@ -103,6 +104,11 @@ public class DatabaseAccessor {
                     "Failed to get new posts. Check network connection.",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void getPostsFromCurrentLocation() {
+        GeoPoint currentLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
+        getPostsFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
     }
 
 }
