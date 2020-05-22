@@ -33,13 +33,13 @@ public class PostDrawer {
     }
 
     public void clearPostList(){
-        new clearPostListAsync().execute(drawRepo);
+        new clearPostListAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, drawRepo);
     }
 
     //Async Task Call in createPost
     public void createPost(JSONObject newPostJSON)
     {
-        new parsePostJSONAsync().execute(newPostJSON);
+        new parsePostJSONAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, newPostJSON);
     }
 
     //Seperated out the doInbackground logic from the AsyncTask so I could Unit Test it

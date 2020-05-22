@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         try {
             post.put("user_message_text", postText);
             post.put("radius", postRadius);
-            post.put("latitude", messageLocation.getLongitude());
-            post.put("longitude", messageLocation.getLatitude());
+            post.put("latitude", messageLocation.getLatitude());
+            post.put("longitude", messageLocation.getLongitude());
             post.put("message_duration", postDuration);
             post.put("message_delay", postDelay);
             post.put("user_message_image", decodedImage);
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             // Wait ten seconds
             while(true) {
                 DatabaseAccessor.getPostsFromCurrentLocation();
-                waitInThread(10000);
+                waitInThread(60000);
             }
         }
 
