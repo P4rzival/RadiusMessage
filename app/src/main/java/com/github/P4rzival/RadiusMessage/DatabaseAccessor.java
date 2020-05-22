@@ -73,6 +73,10 @@ public class DatabaseAccessor {
 
             requestQueue.add(stringRequest);
 
+            // TODO 20200521: We can't actually know that the network request is done, but we'll
+            //  call it good enough here for now
+            postRequestSupervisor.prsContinueTrue();
+
             return 0;
         }
 
