@@ -86,6 +86,9 @@ public class DatabaseAccessor {
             try {
                 for(int i=0; i<response.length(); i++) {
                     postDrawer.createPost(response.getJSONObject(i));
+
+                    System.out.println("Debug: Cool post alert: "
+                            + response.getJSONObject(i).get("user_message_text"));
                 }
             } catch(JSONException je) {
                 System.out.println("Error in GetPostsRequestListener.onResponse: "
