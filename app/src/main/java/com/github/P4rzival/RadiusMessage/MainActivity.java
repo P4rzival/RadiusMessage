@@ -16,15 +16,12 @@ import android.content.Context;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Base64InputStream;
 import android.view.View;
 
 import android.widget.Button;
@@ -36,11 +33,8 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
             }
         });
+
+        new CheckForPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void openDialog() {
@@ -183,6 +179,30 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             //        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
     }
+
+    // This should be replaced with a Service or something
+    private static class CheckForPostsTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            // Wait ten seconds
+            while(true) {
+                DatabaseAccessor.getPostsFromCurrentLocation();
+                waitInThread(10000);
+            }
+        }
+
+        private void waitInThread(long millis) {
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                System.out.println("Error In waitInThread: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 
 }
 
