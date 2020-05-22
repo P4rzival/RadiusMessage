@@ -118,13 +118,13 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             decodedImage = BitmapToString(bitmap);
         }
         try {
-            post.put("userTextMessage", postText);
+            post.put("user_message_text", postText);
             post.put("radius", postRadius);
-            post.put("locationX", messageLocation.getLongitude());
-            post.put("locationY", messageLocation.getLatitude());
-            post.put("messageDuration", postDuration);
-            post.put("messageDelay", postDelay);
-            post.put("userMessageImage", decodedImage);
+            post.put("latitude", messageLocation.getLongitude());
+            post.put("longitude", messageLocation.getLatitude());
+            post.put("message_duration", postDuration);
+            post.put("message_delay", postDelay);
+            post.put("user_message_image", decodedImage);
         }catch (JSONException e){
             e.printStackTrace();
         }
