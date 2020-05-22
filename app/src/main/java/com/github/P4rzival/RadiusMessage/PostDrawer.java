@@ -33,13 +33,13 @@ public class PostDrawer {
     }
 
     public void clearPostList(){
-        new clearPostListAsync().execute(drawRepo);
+        new clearPostListAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, drawRepo);
     }
 
     //Async Task Call in createPost
     public void createPost(JSONObject newPostJSON)
     {
-        new parsePostJSONAsync().execute(newPostJSON);
+        new parsePostJSONAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, newPostJSON);
     }
 
     //Seperated out the doInbackground logic from the AsyncTask so I could Unit Test it
@@ -47,13 +47,13 @@ public class PostDrawer {
 
         drawData newData = new drawData();
 
-        String message = newPostJSON.getString("userTextMessage");
+        String message = newPostJSON.getString("user_message_text");
         double radius = newPostJSON.getDouble("radius");
-        double locX = newPostJSON.getDouble("locationX");
-        double locY = newPostJSON.getDouble("locationY");
-        long messageDur = newPostJSON.getLong("messageDuration");
-        long messageDelay = newPostJSON.getLong("messageDelay");
-        String userMessageImage = newPostJSON.getString("userMessageImage");
+        double locX = newPostJSON.getDouble("longitude");
+        double locY = newPostJSON.getDouble("latitude");
+        long messageDur = newPostJSON.getLong("message_duration");
+        long messageDelay = newPostJSON.getLong("message_delay");
+        String userMessageImage = newPostJSON.getString("user_message_image");
 
         newData.setUserMessageText(message);
         newData.setRadius(radius);

@@ -12,15 +12,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Base64InputStream;
 import android.view.View;
 
 import android.widget.Button;
@@ -32,10 +29,9 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.io.InputStream;
 import java.util.List;
 
@@ -93,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
             }
         });
+
+        new CheckForPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void openDialog() {
@@ -110,13 +108,13 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
             decodedImage = postImage.BitmapToString(bitmap);
         }
         try {
-            post.put("userTextMessage", postText);
+            post.put("user_message_text", postText);
             post.put("radius", postRadius);
-            post.put("locationX", messageLocation.getLongitude());
-            post.put("locationY", messageLocation.getLatitude());
-            post.put("messageDuration", postDuration);
-            post.put("messageDelay", postDelay);
-            post.put("userMessageImage", decodedImage);
+            post.put("latitude", messageLocation.getLatitude());
+            post.put("longitude", messageLocation.getLongitude());
+            post.put("message_duration", postDuration);
+            post.put("message_delay", postDelay);
+            post.put("user_message_image", decodedImage);
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -126,5 +124,72 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
+    }
+
+    public String BitmapToString(Bitmap bitmap){
+        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 24, bitStreamOut);
+        byte[] byteImageArray = bitStreamOut.toByteArray();
+        String convertedImage = Base64.encodeToString(byteImageArray, Base64.URL_SAFE);
+        return convertedImage;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (int i = 0; i < grantResults.length; i++) {
+            permissionsToRequest.add(permissions[i]);
+        }
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    private void requestPermissionsIfNecessary(String[] permissions) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted
+                permissionsToRequest.add(permission);
+            }
+        }
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+
+
+            //ActivityCompat.requestPermissions((Activity) RadiusMessage.getAppInstance().getApplicationContext(),
+            //        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
+    }
+
+    // This should be replaced with a Service or something
+    private static class CheckForPostsTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            // Wait ten seconds
+            while(true) {
+                DatabaseAccessor.getPostsFromCurrentLocation();
+                waitInThread(60000);
+            }
+        }
+
+        private void waitInThread(long millis) {
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                System.out.println("Error In waitInThread: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
     }
 }
