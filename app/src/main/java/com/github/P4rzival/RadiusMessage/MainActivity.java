@@ -4,13 +4,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -38,6 +42,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PostDialog.TextPostDialogListener {
 
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     public ConstraintLayout parentLayout;
     PostImage postImage;
 
@@ -60,6 +65,13 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         Context appContext = getApplicationContext();
         org.osmdroid.config.Configuration.getInstance().load(appContext, PreferenceManager.getDefaultSharedPreferences(appContext));
         setContentView(R.layout.activity_main);
+
+        requestPermissionsIfNecessary(new String[]{
+                // if you need to show the current location, uncomment the line below
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                // WRITE_EXTERNAL_STORAGE is required in order to show the map
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        });
 
         //Need this in main activity for postRenderer to work.
         postImage = new PostImage();
@@ -124,14 +136,6 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
 
     public void updatePostMap(List<drawData> currentDrawData) {
         mapActivity.updatePostMapOverlays(currentDrawData);
-    }
-
-    public String BitmapToString(Bitmap bitmap){
-        ByteArrayOutputStream bitStreamOut = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 24, bitStreamOut);
-        byte[] byteImageArray = bitStreamOut.toByteArray();
-        String convertedImage = Base64.encodeToString(byteImageArray, Base64.URL_SAFE);
-        return convertedImage;
     }
 
 
