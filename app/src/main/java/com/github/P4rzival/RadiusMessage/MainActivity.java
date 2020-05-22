@@ -4,17 +4,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -36,14 +32,14 @@ import org.osmdroid.util.GeoPoint;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements PostDialog.TextPostDialogListener {
 
-    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-
     public ConstraintLayout parentLayout;
+    PostImage postImage;
 
     public PostRenderer postRenderer;
     private Button testPostButton;
@@ -65,14 +61,8 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         org.osmdroid.config.Configuration.getInstance().load(appContext, PreferenceManager.getDefaultSharedPreferences(appContext));
         setContentView(R.layout.activity_main);
 
-        requestPermissionsIfNecessary(new String[]{
-                // if you need to show the current location, uncomment the line below
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                // WRITE_EXTERNAL_STORAGE is required in order to show the map
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        });
-
         //Need this in main activity for postRenderer to work.
+        postImage = new PostImage();
         parentLayout = findViewById(R.id.parentLayout);
         postRenderer = new ViewModelProvider(this).get(PostRenderer.class);
         //postRenderer.deleteAllData();
@@ -115,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         GeoPoint messageLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
         String decodedImage = "";
         if(bitmap != null){
-            decodedImage = BitmapToString(bitmap);
+            decodedImage = postImage.BitmapToString(bitmap);
         }
         try {
             post.put("user_message_text", postText);
@@ -202,7 +192,4 @@ public class MainActivity extends AppCompatActivity implements PostDialog.TextPo
         }
 
     }
-
-
 }
-

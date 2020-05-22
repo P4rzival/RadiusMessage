@@ -1,6 +1,10 @@
 package com.github.P4rzival.RadiusMessage;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BlendMode;
@@ -11,7 +15,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +31,8 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.github.P4rzival.RadiusMessage.PostDesign.ThemePicker;
 
@@ -35,12 +43,21 @@ import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class RadiusPost extends Polygon {
 
+    PostImage postImage;
     public Paint paint;
     public drawData postData;
     public GeoPoint postGeoPoint;
@@ -48,10 +65,13 @@ public class RadiusPost extends Polygon {
     private ConstraintLayout popupParentLayout;
     private static final float MIN_BRIGHTNESS = 0.8f;
 
+    ImageView imageView;
+    ImageView saveButton;
 
     public RadiusPost(MapView mapView, drawData newDrawData, ConstraintLayout parentLayout) {
         super(mapView);
 
+        postImage = new PostImage();
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         postData = newDrawData;
         popupParentLayout = parentLayout;
@@ -107,6 +127,7 @@ public class RadiusPost extends Polygon {
 
         LayoutInflater inflater = (LayoutInflater) RadiusMessage.getAppInstance().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newMessagePopup = inflater.inflate(R.layout.post_message, null);
+        saveButton = (ImageView) newMessagePopup.findViewById(R.id.saveButton);
 
         int width = 920;
         int height = 1800;
@@ -119,8 +140,8 @@ public class RadiusPost extends Polygon {
 
         //Populate message content
         if(postData.getUserMessageImage() != ""){
-            ImageView imageView = window.getContentView().findViewById(R.id.messageImageView);
-            imageView.setImageBitmap(StringToBitMap(postData.getUserMessageImage()));
+            imageView = window.getContentView().findViewById(R.id.messageImageView);
+            imageView.setImageBitmap(postImage.StringToBitMap(postData.getUserMessageImage()));
         }
 
         TextView currentText = window
@@ -128,6 +149,15 @@ public class RadiusPost extends Polygon {
                 .findViewById(R.id.messageTextView);
 
         currentText.setText(postData.getUserMessageText());
+
+
+        View.OnClickListener saveButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postImage.savePostImage(postImage.StringToBitMap(postData.getUserMessageImage()));
+            }
+        };
+        saveButton.setOnClickListener(saveButtonListener);
 
         newMessagePopup.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -142,16 +172,4 @@ public class RadiusPost extends Polygon {
                 , "Post Opened."
                 , Toast.LENGTH_SHORT).show();
     }
-
-    public Bitmap StringToBitMap(String encodedImageString){
-        try{
-            byte [] encodeByte = Base64.decode(encodedImageString, Base64.URL_SAFE);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0 ,encodeByte.length);
-            return bitmap;
-        } catch(Exception e){
-            e.getMessage();
-            return null;
-        }
-    }
-
 }
