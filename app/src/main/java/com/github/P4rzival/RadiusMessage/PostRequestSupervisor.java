@@ -22,7 +22,9 @@ public class PostRequestSupervisor {
         this.post = newPost;
         timeoutCounter = 0;
         waitingPostRequestSupervisors.add(this);
-        new SpinlockTask().execute(this);
+        // This is necessary to make AsyncTasks execute in parallel when launched from the same Activity
+        //  https://stackoverflow.com/questions/31957815/android-asynctask-not-executing
+        new SpinlockTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
     }
 
     private class SpinlockTask extends AsyncTask<PostRequestSupervisor, Long, Integer> {
