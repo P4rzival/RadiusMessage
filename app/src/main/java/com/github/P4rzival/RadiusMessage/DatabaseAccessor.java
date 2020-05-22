@@ -107,6 +107,8 @@ public class DatabaseAccessor {
     }
 
     public static void getPostsFromCurrentLocation() {
+        // TODO From 20200521: Should this have a handler in case GPS access isn't available?
+        //  This currently produces a NullPointerException in that case.
         GeoPoint currentLocation = UserLocationManager.getInstance().getCurrentLocationAsGeoPoint();
         getPostsFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude());
     }
