@@ -4,6 +4,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -37,6 +40,8 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements PostDialog.TextPostDialogListener {
+
+    private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     public ConstraintLayout parentLayout;
     PostImage postImage;

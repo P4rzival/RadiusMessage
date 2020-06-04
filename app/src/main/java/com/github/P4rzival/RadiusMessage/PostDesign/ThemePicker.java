@@ -24,6 +24,9 @@ public class ThemePicker {
         add(0x58b4ae);
         add(0xffacb7);
         add(0xfec771);
+        add(0x79d70f);
+        add(0x45046a);
+        add(0xffd31d);
     }};
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -42,5 +45,22 @@ public class ThemePicker {
         int newPostColor = Color.argb(a,r,g,b);
         return newPostColor;
 
+    }
+
+    public int getColorFromPalatte(int colorIndex){
+
+        if (colorIndex >= palette.size()){
+            colorIndex -= 1;
+        }
+
+        int currentColor = palette.get(colorIndex);
+
+        int a = 145;
+        int r = (currentColor & 0xFF0000) >> 16;
+        int g = (currentColor & 0xFF00) >> 8;
+        int b = (currentColor & 0xFF);
+
+        int newPostColor = Color.argb(a,r,g,b);
+        return newPostColor;
     }
 }

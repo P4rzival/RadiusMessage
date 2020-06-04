@@ -101,6 +101,7 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
     public void updatePostMapOverlays(List<drawData> currentDrawData) {
         map.getOverlays().remove(locationNewOverlay);
         map.getOverlays().remove(mapEventsOverlay);
+        currentDrawData = sortSmallestToLargest(currentDrawData);
         for (int i = 0; i <currentDrawData.size(); i++){
             RadiusPost newPost = new RadiusPost(map, currentDrawData.get(i),parentLayout);
             newPost.drawMapPost(map);
@@ -164,6 +165,32 @@ public class MapActivity extends AppCompatActivity implements MapEventsReceiver 
             }
         }
         return smallestPost;
+    }
+
+    public List<drawData> sortSmallestToLargest( List<drawData> currentPostList)
+    {
+        List<drawData> sortedistOfPosts = currentPostList;
+
+        int arrayLen = sortedistOfPosts.size();
+        int minIndex;
+
+        for(int i = 0; i < arrayLen - 1; i++)
+        {
+            minIndex = i;
+            for (int j = i + 1; j < arrayLen; j++)
+            {
+                if(sortedistOfPosts.get(j).getRadius() >= sortedistOfPosts.get(minIndex).getRadius())
+                {
+                    minIndex = j;
+                }
+            }
+
+            drawData tempData = sortedistOfPosts.get(minIndex);
+            sortedistOfPosts.set(minIndex, sortedistOfPosts.get(i));
+            sortedistOfPosts.set(i, tempData);
+        }
+
+        return sortedistOfPosts;
     }
 
     public void openPostInfoPopup(final RadiusPost currentPostRadius){

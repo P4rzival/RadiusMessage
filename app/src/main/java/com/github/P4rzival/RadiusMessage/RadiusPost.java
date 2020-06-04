@@ -84,9 +84,9 @@ public class RadiusPost extends Polygon {
     public void drawMapPost(MapView mapView){
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            paint.setColor(new ThemePicker().getRandomColorFromPalatte());
+            paint.setColor(new ThemePicker().getColorFromPalatte(((int)postData.getRadius())/10));
         }else {
-            generateRandomBrightColor();
+            paint.setColor(new ThemePicker().getColorFromPalatte(((int)postData.getRadius())/10));
         }
 
 
@@ -101,19 +101,21 @@ public class RadiusPost extends Polygon {
         this.setPoints(Polygon.pointsAsCircle(postGeoPoint, postData.getRadius()));
 
         this.setFillColor(paint.getColor());
-        this.setStrokeColor(paint.getColor());
-        this.setStrokeWidth(1);
+        this.setStrokeColor(generateRandomBrightColor().getColor());
+        this.setStrokeWidth(4);
 
         mapView.getOverlays().add(this);
     }
 
-    private void generateRandomBrightColor(){
+    private Paint generateRandomBrightColor(){
         Random rNumber = new Random();
+        Paint randomPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         int r = 1 + (255- 200) * rNumber.nextInt();
         int g = 1 + (255- 200) * rNumber.nextInt();
         int b = 1 + (255- 50) * rNumber.nextInt();
-        paint.setARGB(1,r,g,b);
-        paint.setAlpha(130);
+        randomPaint.setARGB(1,r,g,b);
+        randomPaint.setAlpha(130);
+        return randomPaint;
     }
 
     @Override
